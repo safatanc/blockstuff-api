@@ -1,0 +1,32 @@
+@base_url = http://localhost:5000
+@access_token = AccessTokenHere
+
+### Find All Minecraft Servers
+GET {{base_url}}/minecraftserver
+
+### Find Minecraft Server by IP
+GET {{base_url}}/minecraftserver/luckynetwork.net
+
+### Create Minecraft Server
+POST {{base_url}}/minecraftserver
+Content-Type: application/json
+
+{
+  "ip": "luckynetwork.net",
+  "slug": "luckynetwork",
+  "name": "LuckyNetwork",
+  "author_id": "3cc09e1f-2356-4a8d-ac8b-1dd63c3e5601"
+}
+
+### Update Minecraft Server
+PATCH {{base_url}}/minecraftserver/3cc09e1f-2356-4a8d-ac8b-1dd63c3e5601
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "phone": "+6281346173830"
+}
+
+### Delete Minecraft Server
+DELETE {{base_url}}/minecraftserver/c80fc4c2-8156-4790-86d5-c752f673929a
+Authorization: Bearer {{access_token}}

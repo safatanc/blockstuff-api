@@ -1,0 +1,33 @@
+@base_url = http://localhost:5000
+@access_token = AccessTokenHere
+
+### Find All Users
+GET {{base_url}}/user
+
+### Find User by Username
+GET {{base_url}}/user/agilistikmal
+
+### Create User
+POST {{base_url}}/user
+Content-Type: application/json
+
+{
+  "username": "agilistikmal",
+  "email": "agilistikmal3@gmail.com",
+  "phone": "+6281346173829",
+  "full_name": "Agil Ghani Istikmal",
+  "password": "Rahasia123"
+}
+
+### Update User
+PATCH {{base_url}}/user/3cc09e1f-2356-4a8d-ac8b-1dd63c3e5601
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "phone": "+6281346173830"
+}
+
+### Delete User
+DELETE {{base_url}}/user/e5181182-5db1-4a9f-8dc0-ae25cd90b2aa
+Authorization: Bearer {{access_token}}

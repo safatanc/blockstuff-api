@@ -19,5 +19,6 @@ func (r *Routes) Init() {
 	r.Mux.HandleFunc("GET /minecraftserver/{ip}", r.Controller.FindByIP)
 	r.Mux.HandleFunc("POST /minecraftserver", r.Controller.Create)
 	r.Mux.HandleFunc("PATCH /minecraftserver/{id}", r.Controller.Update)
+	r.Mux.HandleFunc("PATCH /minecraftserver/{id}/rcon", r.Controller.UpdateRcon)
 	r.Mux.HandleFunc("DELETE /minecraftserver/{id}", r.Controller.Delete)
 }

@@ -71,3 +71,23 @@ func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 	response.Success(w, minecraftserver)
 }
+
+func (c *Controller) UpdateRcon(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	_, err := c.Service.FindByID(id)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	var rcon *MinecraftServerRcon
+	json.NewDecoder(r.Body).Decode(&rcon)
+
+	rcon.MinecraftServerID = id
+
+	minecraftserver, err := c.Service.UpdateRcon(rcon)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	response.Success(w, minecraftserver)
+}

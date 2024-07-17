@@ -26,8 +26,10 @@ type MinecraftServer struct {
 }
 
 type MinecraftServerRcon struct {
-	ID       uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id,omitempty"`
-	IP       string    `gorm:"unique" validate:"required,ip,hostname" json:"ip,omitempty"`
-	Port     int       `validate:"required,number" json:"port,omitempty"`
-	Password string    `validate:"required"`
+	ID                uuid.UUID        `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id,omitempty"`
+	IP                string           `gorm:"unique" validate:"required,fqdn" json:"ip,omitempty"`
+	Port              int              `validate:"required,number" json:"port,omitempty"`
+	Password          string           `validate:"required" json:"password,omitempty"`
+	MinecraftServerID string           `gorm:"unique" validate:"required,uuid" json:"minecraft_server_id,omitempty"`
+	MinecraftServer   *MinecraftServer `json:"minecraft_server,omitempty"`
 }

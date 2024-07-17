@@ -87,3 +87,27 @@ func (s *Service) Delete(id string) (*MinecraftServer, error) {
 	}
 	return minecraftserver, nil
 }
+
+func (s *Service) UpdateRcon(rcon *MinecraftServerRcon) (*MinecraftServer, error) {
+	err := s.Validate.Struct(rcon)
+	if err != nil {
+		return nil, err
+	}
+
+	result := s.DB.Where("minecraft_server_id = ?", rcon.MinecraftServerID).Updates(&rcon)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	if result.RowsAffected == 0 {
+		result = s.DB.Create(&rcon)
+		if result.Error != nil {
+			return nil, result.Error
+		}
+	}
+
+	var minecraftserver *MinecraftServer
+	s.DB.Preload("Author").Preload("MinecraftServerRcon").First(&minecraftserver, "id = ?", rcon.MinecraftServerID)
+
+	minecraftserver.Author = minecraftserver.Author.ToResponse()
+	return minecraftserver, nil
+}

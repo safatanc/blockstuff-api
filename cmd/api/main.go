@@ -10,6 +10,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/coreapi"
+	"github.com/safatanc/blockstuff-api/internal/domain/auth"
 	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
 	"github.com/safatanc/blockstuff-api/internal/domain/user"
 	"github.com/safatanc/blockstuff-api/internal/server"
@@ -53,6 +54,12 @@ func main() {
 	minecraftServerController := minecraftserver.NewController(minecraftServerService)
 	minecraftServerRoutes := minecraftserver.NewRoutes(mux, minecraftServerController)
 	minecraftServerRoutes.Init()
+
+	// Domain Auth
+	authService := auth.NewService(db, validate)
+	authController := auth.NewController(authService)
+	authRoutes := auth.NewRoutes(mux, authController)
+	authRoutes.Init()
 
 	// Server
 	log.Printf("Running on http://localhost:%v", PORT)

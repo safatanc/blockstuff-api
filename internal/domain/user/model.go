@@ -13,6 +13,7 @@ type User struct {
 	Phone     string    `gorm:"unique" validate:"omitempty,e164" json:"phone,omitempty"`
 	FullName  string    `validate:"required,min=3,max=50" json:"full_name,omitempty"`
 	Password  string    `validate:"required,min=8" json:"password,omitempty"`
+	Role      string    `gorm:"default:SELLER" validate:"omitempty,uppercase"`
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at,omitempty"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at,omitempty"`
 }

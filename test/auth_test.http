@@ -1,0 +1,11 @@
+@base_url = http://localhost:5000
+@access_token = AccessTokenHere
+
+### Login
+POST {{base_url}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "agilistikmal",
+  "password": "Rahasia123"
+}

@@ -1,5 +1,5 @@
 @base_url = http://localhost:5000
-@access_token = AccessTokenHere
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjEzNTU2NzYsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.U8EUGx64E61NUHVoCgm5v5G3lfMqtVKRWvwEXam7j5U
 
 ### Find All Users
 GET {{base_url}}/user

@@ -52,6 +52,7 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
 	}
+
 	json.NewDecoder(r.Body).Decode(&user)
 
 	user, err = c.Service.Update(id, user)

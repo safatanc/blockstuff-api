@@ -1,11 +1,13 @@
 @base_url = http://localhost:5000
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjEzNTU2NzYsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.U8EUGx64E61NUHVoCgm5v5G3lfMqtVKRWvwEXam7j5U
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE0NTkxNDYsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.RdXFYGaTs43fB47Cg6mWCUP343iHbm1tWEwq91w5Lr4
 
 ### Find All Users
 GET {{base_url}}/user
+Authorization: Bearer {{access_token}}
 
 ### Find User by Username
 GET {{base_url}}/user/agilistikmal
+Authorization: Bearer {{access_token}}
 
 ### Create User
 POST {{base_url}}/user
@@ -25,7 +27,7 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "phone": "+6281346173830"
+  "role": "ADMIN"
 }
 
 ### Delete User

@@ -13,6 +13,7 @@ import (
 	"github.com/safatanc/blockstuff-api/internal/domain/auth"
 	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
 	"github.com/safatanc/blockstuff-api/internal/domain/user"
+	"github.com/safatanc/blockstuff-api/internal/middleware"
 	"github.com/safatanc/blockstuff-api/internal/server"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -43,10 +44,13 @@ func main() {
 	}
 	midtransCore.New(midtransServerKey, midtransEnvironment)
 
+	// Middleware
+	mw := middleware.New()
+
 	// Domain User
 	userService := user.NewService(db, validate)
 	userController := user.NewController(userService)
-	userRoutes := user.NewRoutes(mux, userController)
+	userRoutes := user.NewRoutes(mux, userController, mw)
 	userRoutes.Init()
 
 	// Domain MinecraftServer

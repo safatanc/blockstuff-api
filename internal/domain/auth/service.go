@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -39,22 +38,6 @@ func (s *Service) NewToken(username string) (string, error) {
 	return tokenString, err
 }
 
-func (s *Service) VerifyToken(tokenString string) (*jwt.Token, error) {
-	jwtSecret := []byte(os.Getenv("JWT_SECRET_KEY"))
-	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
-		return jwtSecret, nil
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	if !token.Valid {
-		return nil, fmt.Errorf("invalid token")
-	}
-
-	return token, nil
-}
-
 func (s *Service) VerifyUser(username string, password string) (*Auth, error) {
 	var u *user.User
 	result := s.DB.First(&u, "username = ?", username)
@@ -73,15 +56,4 @@ func (s *Service) VerifyUser(username string, password string) (*Auth, error) {
 	return &Auth{
 		Token: tokenString,
 	}, nil
-}
-
-func (s *Service) VerifyAccess(u *user.User, authorization string) error {
-	tokenString := authorization[len("Bearer "):]
-	token, err := s.VerifyToken(tokenString)
-	if err != nil {
-		return err
-	}
-	claims := token.Claims.(jwt.MapClaims)
-	fmt.Println(claims)
-	return nil
 }

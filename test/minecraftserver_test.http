@@ -1,11 +1,15 @@
 @base_url = http://localhost:5000
-@access_token = AccessTokenHere
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE2MTMyNzIsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.AkDiMZ00uYQ0wEeRls0zywAMJNz8tH2MTiYesAGsPgc
 
 ### Find All Minecraft Servers
 GET {{base_url}}/minecraftserver
 
 ### Find Minecraft Server by IP
 GET {{base_url}}/minecraftserver/aerocraft.net
+
+### Find Minecraft Server by IP with details
+GET {{base_url}}/minecraftserver/aerocraft.net/detail
+Authorization: Bearer {{access_token}}
 
 ### Create Minecraft Server
 POST {{base_url}}/minecraftserver
@@ -19,7 +23,7 @@ Content-Type: application/json
 }
 
 ### Update Minecraft Server
-PATCH {{base_url}}/minecraftserver/3cc09e1f-2356-4a8d-ac8b-1dd63c3e5601
+PATCH {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 

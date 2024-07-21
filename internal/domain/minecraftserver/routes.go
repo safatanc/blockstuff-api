@@ -1,24 +1,31 @@
 package minecraftserver
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/safatanc/blockstuff-api/internal/middleware"
+)
 
 type Routes struct {
 	Mux        *http.ServeMux
 	Controller *Controller
+	Middleware *middleware.Middleware
 }
 
-func NewRoutes(mux *http.ServeMux, controller *Controller) *Routes {
+func NewRoutes(mux *http.ServeMux, controller *Controller, middleware *middleware.Middleware) *Routes {
 	return &Routes{
 		Mux:        mux,
 		Controller: controller,
+		Middleware: middleware,
 	}
 }
 
 func (r *Routes) Init() {
 	r.Mux.HandleFunc("GET /minecraftserver", r.Controller.FindAll)
 	r.Mux.HandleFunc("GET /minecraftserver/{ip}", r.Controller.FindByIP)
-	r.Mux.HandleFunc("POST /minecraftserver", r.Controller.Create)
-	r.Mux.HandleFunc("PATCH /minecraftserver/{id}", r.Controller.Update)
-	r.Mux.HandleFunc("PATCH /minecraftserver/{id}/rcon", r.Controller.UpdateRcon)
-	r.Mux.HandleFunc("DELETE /minecraftserver/{id}", r.Controller.Delete)
+	r.Mux.Handle("GET /minecraftserver/{ip}/detail", r.Middleware.Auth(http.HandlerFunc(r.Controller.FindByIPDetail)))
+	r.Mux.Handle("POST /minecraftserver", r.Middleware.Auth(http.HandlerFunc(r.Controller.Create)))
+	r.Mux.Handle("PATCH /minecraftserver/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Update)))
+	r.Mux.Handle("PATCH /minecraftserver/{id}/rcon", r.Middleware.Auth(http.HandlerFunc(r.Controller.UpdateRcon)))
+	r.Mux.Handle("DELETE /minecraftserver/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Delete)))
 }

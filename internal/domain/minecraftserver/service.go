@@ -26,21 +26,25 @@ func (s *Service) FindAll() []*MinecraftServer {
 
 func (s *Service) FindByID(id string) (*MinecraftServer, error) {
 	var minecraftserver *MinecraftServer
-	result := s.DB.Preload("Author").Preload("MinecraftServerRcon").First(&minecraftserver, "id = ?", id)
+	result := s.DB.First(&minecraftserver, "id = ?", id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	minecraftserver.Author = minecraftserver.Author.ToResponse()
 	return minecraftserver, nil
 }
 
-func (s *Service) FindByIP(ip string) (*MinecraftServer, error) {
+func (s *Service) FindByIP(ip string, detail bool) (*MinecraftServer, error) {
 	var minecraftserver *MinecraftServer
-	result := s.DB.Preload("Author").Preload("MinecraftServerRcon").First(&minecraftserver, "ip = ?", ip)
+	var result *gorm.DB
+	if detail {
+		result = s.DB.Preload("Author").Preload("MinecraftServerRcon").First(&minecraftserver, "ip = ?", ip)
+		minecraftserver.Author = minecraftserver.Author.ToResponse()
+	} else {
+		result = s.DB.First(&minecraftserver, "ip = ?", ip)
+	}
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	minecraftserver.Author = minecraftserver.Author.ToResponse()
 	return minecraftserver, nil
 }
 

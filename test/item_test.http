@@ -20,6 +20,27 @@ Authorization: Bearer {{access_token}}
   "category": "RANK"
 }
 
+### Add Image to Item
+POST {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/2bf8a0c3-c960-4c6d-90be-63b79d226f80/image
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "url": "https://cdn.blockstuff.safatanc.com/images/blsdfawd.jpg"
+}
+
+### Add Action to Item
+POST {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/2bf8a0c3-c960-4c6d-90be-63b79d226f80/action
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "type": "COMMAND",
+  "action": "addcoins %player% 5000",
+  "order": 3,
+  "description": "Give 5000 coins"
+}
+
 ### Update Minecraft Server Item
 PATCH {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/2bf8a0c3-c960-4c6d-90be-63b79d226f80
 Content-Type: application/json

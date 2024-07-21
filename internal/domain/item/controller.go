@@ -78,6 +78,76 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, item)
 }
 
+func (c *Controller) CreateImage(w http.ResponseWriter, r *http.Request) {
+	minecraftServerID := r.PathValue("minecraft_server_id")
+	id := r.PathValue("id")
+
+	claims := r.Context().Value("claims").(jwt.MapClaims)
+	claimsUsername := claims["username"].(string)
+	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	minecraftserver, err := c.MinecraftServerService.FindByID(minecraftServerID)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	if !(claimsUser.Role == "ADMIN" || claimsUser.ID.String() == minecraftserver.AuthorID) {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	var itemImage *ItemImage
+	json.NewDecoder(r.Body).Decode(&itemImage)
+	itemImage.ItemID = id
+
+	itemImage, err = c.Service.CreateImage(itemImage)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	response.Success(w, itemImage)
+}
+
+func (c *Controller) CreateAction(w http.ResponseWriter, r *http.Request) {
+	minecraftServerID := r.PathValue("minecraft_server_id")
+	id := r.PathValue("id")
+
+	claims := r.Context().Value("claims").(jwt.MapClaims)
+	claimsUsername := claims["username"].(string)
+	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	minecraftserver, err := c.MinecraftServerService.FindByID(minecraftServerID)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	if !(claimsUser.Role == "ADMIN" || claimsUser.ID.String() == minecraftserver.AuthorID) {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	var itemAction *ItemAction
+	json.NewDecoder(r.Body).Decode(&itemAction)
+	itemAction.ItemID = id
+
+	itemAction, err = c.Service.CreateAction(itemAction)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	response.Success(w, itemAction)
+}
+
 func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 	claims := r.Context().Value("claims").(jwt.MapClaims)
 	claimsUsername := claims["username"].(string)

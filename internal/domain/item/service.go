@@ -21,13 +21,13 @@ func NewService(db *gorm.DB, validate *validator.Validate) *Service {
 
 func (s *Service) FindAll(minecraftServerID string) []*Item {
 	var items []*Item
-	s.DB.Order("price ASC").Find(&items, "minecraft_server_id = ?", minecraftServerID)
+	s.DB.Preload("ItemImages").Order("price ASC").Find(&items, "minecraft_server_id = ?", minecraftServerID)
 	return items
 }
 
 func (s *Service) FindByID(id string) (*Item, error) {
 	var item *Item
-	result := s.DB.First(&item, "id = ?", id)
+	result := s.DB.Preload("ItemActions").Preload("ItemImages").First(&item, "id = ?", id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -36,7 +36,7 @@ func (s *Service) FindByID(id string) (*Item, error) {
 
 func (s *Service) FindBySlug(minecraftServerID string, slug string) (*Item, error) {
 	var item *Item
-	result := s.DB.First(&item, "minecraft_server_id = ? AND slug = ?", minecraftServerID, slug)
+	result := s.DB.Preload("ItemActions").Preload("ItemImages").First(&item, "minecraft_server_id = ? AND slug = ?", minecraftServerID, slug)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -60,6 +60,34 @@ func (s *Service) Create(item *Item) (*Item, error) {
 	}
 
 	return item, nil
+}
+
+func (s *Service) CreateImage(itemImage *ItemImage) (*ItemImage, error) {
+	err := s.Validate.Struct(itemImage)
+	if err != nil {
+		return nil, err
+	}
+
+	result := s.DB.Create(&itemImage)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return itemImage, nil
+}
+
+func (s *Service) CreateAction(itemAction *ItemAction) (*ItemAction, error) {
+	err := s.Validate.Struct(itemAction)
+	if err != nil {
+		return nil, err
+	}
+
+	result := s.DB.Create(&itemAction)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return itemAction, nil
 }
 
 func (s *Service) Update(id string, item *Item) (*Item, error) {

@@ -31,7 +31,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&user.User{}, &minecraftserver.MinecraftServer{}, &item.Item{})
+	db.AutoMigrate(&user.User{}, &minecraftserver.MinecraftServer{}, &item.Item{}, &item.ItemImage{}, &item.ItemAction{})
 
 	// Validate
 	validate := validator.New()

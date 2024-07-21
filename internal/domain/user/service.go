@@ -70,7 +70,7 @@ func (s *Service) Create(user *User) (*User, error) {
 }
 
 func (s *Service) Update(id string, user *User) (*User, error) {
-	err := s.Validate.StructPartial(user)
+	err := s.Validate.Struct(user)
 	if err != nil {
 		return nil, err
 	}

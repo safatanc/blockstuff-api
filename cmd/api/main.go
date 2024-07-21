@@ -11,6 +11,7 @@ import (
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/coreapi"
 	"github.com/safatanc/blockstuff-api/internal/domain/auth"
+	"github.com/safatanc/blockstuff-api/internal/domain/item"
 	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
 	"github.com/safatanc/blockstuff-api/internal/domain/user"
 	"github.com/safatanc/blockstuff-api/internal/middleware"
@@ -30,7 +31,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&user.User{}, &minecraftserver.MinecraftServer{})
+	db.AutoMigrate(&user.User{}, &minecraftserver.MinecraftServer{}, &item.Item{})
 
 	// Validate
 	validate := validator.New()
@@ -58,6 +59,12 @@ func main() {
 	minecraftServerController := minecraftserver.NewController(minecraftServerService, userService)
 	minecraftServerRoutes := minecraftserver.NewRoutes(mux, minecraftServerController, mw)
 	minecraftServerRoutes.Init()
+
+	// Domain Item
+	itemService := item.NewService(db, validate)
+	itemController := item.NewController(itemService, userService, minecraftServerService)
+	itemRoutes := item.NewRoutes(mux, itemController, mw)
+	itemRoutes.Init()
 
 	// Domain Auth
 	authService := auth.NewService(db, validate)

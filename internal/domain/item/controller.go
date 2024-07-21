@@ -1,43 +1,52 @@
-package minecraftserver
+package item
 
 import (
 	"encoding/json"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
 	"github.com/safatanc/blockstuff-api/internal/domain/user"
 	"github.com/safatanc/blockstuff-api/pkg/response"
 	"github.com/safatanc/blockstuff-api/pkg/util"
 )
 
 type Controller struct {
-	Service     *Service
-	UserService *user.Service
+	Service                *Service
+	UserService            *user.Service
+	MinecraftServerService *minecraftserver.Service
 }
 
-func NewController(service *Service, userService *user.Service) *Controller {
+func NewController(service *Service, userService *user.Service, minecraftServerService *minecraftserver.Service) *Controller {
 	return &Controller{
-		Service:     service,
-		UserService: userService,
+		Service:                service,
+		UserService:            userService,
+		MinecraftServerService: minecraftServerService,
 	}
 }
 
 func (c *Controller) FindAll(w http.ResponseWriter, r *http.Request) {
-	minecraftservers := c.Service.FindAll()
-	response.Success(w, minecraftservers)
+	minecraftServerID := r.PathValue("minecraft_server_id")
+	items := c.Service.FindAll(minecraftServerID)
+	response.Success(w, items)
 }
 
-func (c *Controller) FindByIP(w http.ResponseWriter, r *http.Request) {
-	ip := r.PathValue("ip")
-	minecraftserver, err := c.Service.FindByIP(ip, false)
+func (c *Controller) FindBySlug(w http.ResponseWriter, r *http.Request) {
+	minecraftServerID := r.PathValue("minecraft_server_id")
+	slug := r.PathValue("slug")
+
+	item, err := c.Service.FindBySlug(minecraftServerID, slug)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
 	}
-	response.Success(w, minecraftserver)
+
+	response.Success(w, item)
 }
 
-func (c *Controller) FindByIPDetail(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
+	minecraftServerID := r.PathValue("minecraft_server_id")
+
 	claims := r.Context().Value("claims").(jwt.MapClaims)
 	claimsUsername := claims["username"].(string)
 	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
@@ -46,31 +55,27 @@ func (c *Controller) FindByIPDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ip := r.PathValue("ip")
-	minecraftserver, err := c.Service.FindByIP(ip, true)
+	minecraftserver, err := c.MinecraftServerService.FindByID(minecraftServerID)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
 	}
 
-	if claimsUser.ID.String() != minecraftserver.AuthorID {
+	if !(claimsUser.Role == "ADMIN" || claimsUser.ID.String() == minecraftserver.AuthorID) {
 		response.Error(w, http.StatusUnauthorized, "unauthorized")
 		return
 	}
 
-	response.Success(w, minecraftserver)
-}
+	var item *Item
+	json.NewDecoder(r.Body).Decode(&item)
+	item.MinecraftServerID = &minecraftServerID
 
-func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
-	var minecraftserver *MinecraftServer
-	json.NewDecoder(r.Body).Decode(&minecraftserver)
-
-	minecraftserver, err := c.Service.Create(minecraftserver)
+	item, err = c.Service.Create(item)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
 	}
-	response.Success(w, minecraftserver)
+	response.Success(w, item)
 }
 
 func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
@@ -83,7 +88,13 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.PathValue("id")
-	minecraftserver, err := c.Service.FindByID(id)
+	item, err := c.Service.FindByID(id)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	minecraftserver, err := c.MinecraftServerService.FindByID(*item.MinecraftServerID)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
@@ -94,14 +105,14 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewDecoder(r.Body).Decode(&minecraftserver)
+	json.NewDecoder(r.Body).Decode(&item)
 
-	minecraftserver, err = c.Service.Update(id, minecraftserver)
+	item, err = c.Service.Update(id, item)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
 	}
-	response.Success(w, minecraftserver)
+	response.Success(w, item)
 }
 
 func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
@@ -114,7 +125,13 @@ func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.PathValue("id")
-	minecraftserver, err := c.Service.FindByID(id)
+	item, err := c.Service.FindByID(id)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	minecraftserver, err := c.MinecraftServerService.FindByID(*item.MinecraftServerID)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
@@ -125,44 +142,10 @@ func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	minecraftserver, err = c.Service.Delete(id)
+	item, err = c.Service.Delete(id)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
 	}
-	response.Success(w, minecraftserver)
-}
-
-func (c *Controller) UpdateRcon(w http.ResponseWriter, r *http.Request) {
-	claims := r.Context().Value("claims").(jwt.MapClaims)
-	claimsUsername := claims["username"].(string)
-	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
-	if err != nil {
-		response.Error(w, util.GetErrorStatusCode(err), err.Error())
-		return
-	}
-
-	id := r.PathValue("id")
-	minecraftserver, err := c.Service.FindByID(id)
-	if err != nil {
-		response.Error(w, util.GetErrorStatusCode(err), err.Error())
-		return
-	}
-
-	if !(claimsUser.Role == "ADMIN" || claimsUser.ID.String() == minecraftserver.AuthorID) {
-		response.Error(w, http.StatusUnauthorized, "unauthorized")
-		return
-	}
-
-	var rcon *MinecraftServerRcon
-	json.NewDecoder(r.Body).Decode(&rcon)
-
-	rcon.MinecraftServerID = id
-
-	minecraftserver, err = c.Service.UpdateRcon(rcon)
-	if err != nil {
-		response.Error(w, util.GetErrorStatusCode(err), err.Error())
-		return
-	}
-	response.Success(w, minecraftserver)
+	response.Success(w, item)
 }

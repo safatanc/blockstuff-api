@@ -66,7 +66,7 @@ func (s *Service) Create(minecraftserver *MinecraftServer) (*MinecraftServer, er
 }
 
 func (s *Service) Update(id string, minecraftserver *MinecraftServer) (*MinecraftServer, error) {
-	err := s.Validate.StructPartial(minecraftserver)
+	err := s.Validate.Struct(minecraftserver)
 	if err != nil {
 		return nil, err
 	}

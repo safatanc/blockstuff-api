@@ -20,7 +20,6 @@ func NewController(service *Service) *Controller {
 }
 
 func (c *Controller) FindAll(w http.ResponseWriter, r *http.Request) {
-	users := c.Service.FindAll()
 	claims := r.Context().Value("claims").(jwt.MapClaims)
 	claimsUsername := claims["username"].(string)
 	claimsUser, err := c.Service.FindByUsername(claimsUsername)
@@ -33,6 +32,8 @@ func (c *Controller) FindAll(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, http.StatusUnauthorized, "unauthorized")
 		return
 	}
+
+	users := c.Service.FindAll()
 	response.Success(w, users)
 }
 

@@ -1,0 +1,34 @@
+@base_url = http://localhost:5000
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE2MTMyNzIsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.AkDiMZ00uYQ0wEeRls0zywAMJNz8tH2MTiYesAGsPgc
+
+### Find All Minecraft Server Items
+GET {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item
+
+### Find Item by Slug
+GET {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/vip-rank
+
+### Create Minecraft Server Item
+POST {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "VVIP Rank",
+  "slug": "vvip-rank",
+  "description": "VVIP Rank di semua minigames",
+  "price": 70000,
+  "category": "RANK"
+}
+
+### Update Minecraft Server Item
+PATCH {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/2bf8a0c3-c960-4c6d-90be-63b79d226f80
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "category": "RANK"
+}
+
+### Delete Item
+DELETE {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/bd75b3d0-3c7f-4434-b1d5-fde0325fa080
+Authorization: Bearer {{access_token}}

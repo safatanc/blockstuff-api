@@ -78,7 +78,7 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, item)
 }
 
-func (c *Controller) CreateImage(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) AddImage(w http.ResponseWriter, r *http.Request) {
 	minecraftServerID := r.PathValue("minecraft_server_id")
 	id := r.PathValue("id")
 
@@ -105,7 +105,7 @@ func (c *Controller) CreateImage(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&itemImage)
 	itemImage.ItemID = id
 
-	itemImage, err = c.Service.CreateImage(itemImage)
+	itemImage, err = c.Service.AddImage(itemImage)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
@@ -113,7 +113,7 @@ func (c *Controller) CreateImage(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, itemImage)
 }
 
-func (c *Controller) CreateAction(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) AddAction(w http.ResponseWriter, r *http.Request) {
 	minecraftServerID := r.PathValue("minecraft_server_id")
 	id := r.PathValue("id")
 
@@ -140,7 +140,7 @@ func (c *Controller) CreateAction(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&itemAction)
 	itemAction.ItemID = id
 
-	itemAction, err = c.Service.CreateAction(itemAction)
+	itemAction, err = c.Service.AddAction(itemAction)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return

@@ -62,7 +62,7 @@ func (s *Service) Create(item *Item) (*Item, error) {
 	return item, nil
 }
 
-func (s *Service) CreateImage(itemImage *ItemImage) (*ItemImage, error) {
+func (s *Service) AddImage(itemImage *ItemImage) (*ItemImage, error) {
 	err := s.Validate.Struct(itemImage)
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func (s *Service) CreateImage(itemImage *ItemImage) (*ItemImage, error) {
 	return itemImage, nil
 }
 
-func (s *Service) CreateAction(itemAction *ItemAction) (*ItemAction, error) {
+func (s *Service) AddAction(itemAction *ItemAction) (*ItemAction, error) {
 	err := s.Validate.Struct(itemAction)
 	if err != nil {
 		return nil, err

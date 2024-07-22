@@ -1,0 +1,18 @@
+@base_url = http://localhost:5000
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE2OTk4MDYsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.NgEjAsdsA0YBb6l2jeADmkSkkSLyrmVyrPcubzlWpwE
+
+### Find All Minecraft Server Items
+GET {{base_url}}/transaction
+Authorization: Bearer {{access_token}}
+
+### Find Item by Slug
+GET {{base_url}}/transaction
+
+### Create Minecraft Server Item
+POST {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item
+Content-Type: application/json
+
+{
+  ""
+}
+

@@ -13,6 +13,7 @@ import (
 	"github.com/safatanc/blockstuff-api/internal/domain/auth"
 	"github.com/safatanc/blockstuff-api/internal/domain/item"
 	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
+	"github.com/safatanc/blockstuff-api/internal/domain/transaction"
 	"github.com/safatanc/blockstuff-api/internal/domain/user"
 	"github.com/safatanc/blockstuff-api/internal/middleware"
 	"github.com/safatanc/blockstuff-api/internal/server"
@@ -31,7 +32,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&user.User{}, &minecraftserver.MinecraftServer{}, &item.Item{}, &item.ItemImage{}, &item.ItemAction{})
+	db.AutoMigrate(&user.User{}, &minecraftserver.MinecraftServer{}, &item.Item{}, &item.ItemImage{}, &item.ItemAction{}, &transaction.Transaction{})
 
 	// Validate
 	validate := validator.New()
@@ -47,6 +48,12 @@ func main() {
 
 	// Middleware
 	mw := middleware.New()
+
+	// Domain Auth
+	authService := auth.NewService(db, validate)
+	authController := auth.NewController(authService)
+	authRoutes := auth.NewRoutes(mux, authController)
+	authRoutes.Init()
 
 	// Domain User
 	userService := user.NewService(db, validate)
@@ -66,11 +73,11 @@ func main() {
 	itemRoutes := item.NewRoutes(mux, itemController, mw)
 	itemRoutes.Init()
 
-	// Domain Auth
-	authService := auth.NewService(db, validate)
-	authController := auth.NewController(authService)
-	authRoutes := auth.NewRoutes(mux, authController)
-	authRoutes.Init()
+	// Domain Transaction
+	transactionService := transaction.NewService(db, validate)
+	transactionController := transaction.NewController(transactionService, userService, minecraftServerService)
+	transactionRoutes := transaction.NewRoutes(mux, transactionController, mw)
+	transactionRoutes.Init()
 
 	// Server
 	log.Printf("Running on http://localhost:%v", PORT)

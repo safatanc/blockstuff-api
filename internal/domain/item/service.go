@@ -27,7 +27,7 @@ func (s *Service) FindAll(minecraftServerID string) []*Item {
 
 func (s *Service) FindByID(id string) (*Item, error) {
 	var item *Item
-	result := s.DB.Preload("ItemActions").Preload("ItemImages").First(&item, "id = ?", id)
+	result := s.DB.Preload("ItemActions").Preload("ItemImages").Preload("MinecraftServer").First(&item, "id = ?", id)
 	if result.Error != nil {
 		return nil, result.Error
 	}

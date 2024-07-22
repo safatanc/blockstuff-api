@@ -6,13 +6,31 @@ GET {{base_url}}/transaction
 Authorization: Bearer {{access_token}}
 
 ### Find Item by Slug
-GET {{base_url}}/transaction
+GET {{base_url}}/transaction/BS-AsdbS617
 
-### Create Minecraft Server Item
-POST {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item
+### Create Transaction
+POST {{base_url}}/transaction
 Content-Type: application/json
 
 {
-  ""
+  "minecraft_username": "agilistikmal",
+  "email": "agilistikmal3@gmail.com",
+  "transaction_items": [
+    {
+      "item_id": "2bf8a0c3-c960-4c6d-90be-63b79d226f80"
+    }
+  ]
 }
 
+### Update
+PATCH {{base_url}}/transaction/f1ca1f6a-94d9-4539-b710-03c2f782f4c9
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "status": "PAID"
+}
+
+### Delete by ID
+DELETE  {{base_url}}/transaction/f1ca1f6a-94d9-4539-b710-03c2f782f4c9
+Authorization: Bearer {{access_token}}

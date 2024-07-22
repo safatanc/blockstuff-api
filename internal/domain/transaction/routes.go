@@ -23,7 +23,7 @@ func NewRoutes(mux *http.ServeMux, controller *Controller, middleware *middlewar
 func (r *Routes) Init() {
 	r.Mux.Handle("GET /transaction", r.Middleware.Auth(http.HandlerFunc(r.Controller.FindAll)))
 	r.Mux.HandleFunc("GET /transaction/{code}", r.Controller.FindByCode)
-	r.Mux.Handle("POST /transaction/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Create)))
+	r.Mux.HandleFunc("POST /transaction", r.Controller.Create)
 	r.Mux.Handle("PATCH /transaction/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Update)))
 	r.Mux.Handle("DELETE /transaction/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Delete)))
 }

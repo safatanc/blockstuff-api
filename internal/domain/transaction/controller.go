@@ -46,7 +46,7 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	var transaction *Transaction
 	json.NewDecoder(r.Body).Decode(&transaction)
 
-	transaction, err := c.Service.CreateWithItems(transaction, transaction.TransactionItems)
+	transaction, err := c.Service.Create(transaction)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return

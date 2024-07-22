@@ -32,7 +32,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&user.User{}, &minecraftserver.MinecraftServer{}, &item.Item{}, &item.ItemImage{}, &item.ItemAction{}, &transaction.Transaction{})
+	db.AutoMigrate(
+		&user.User{}, &minecraftserver.MinecraftServer{},
+		&item.Item{}, &item.ItemImage{}, &item.ItemAction{},
+		&transaction.Transaction{}, &transaction.TransactionItem{},
+	)
 
 	// Validate
 	validate := validator.New()

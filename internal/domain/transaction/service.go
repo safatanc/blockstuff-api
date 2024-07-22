@@ -91,23 +91,20 @@ func (s *Service) Create(transaction *Transaction) (*Transaction, error) {
 
 		for _, transactionItem := range transaction.TransactionItems {
 			transactionItem.Subtotal = transactionItem.Item.Price * int64(transactionItem.Quantity)
-			transactionItem, err := s.UpdateItem(transactionItem.ID.String(), transactionItem)
+			transactionItem, err := s.UpdateItemTx(tx, transactionItem.ID.String(), transactionItem)
 			if err != nil {
 				return err
 			}
 			transaction.Subtotal += transactionItem.Subtotal
 		}
 
-		//
-		// TODO: FIX NO RESPONSE
-		//
 		chargeResponse, err := s.CreatePayment(transaction)
 		if err != nil {
 			return err
 		}
 		transaction.QrisString = chargeResponse.QRString
 
-		transaction, err = s.Update(transaction.ID.String(), transaction)
+		transaction, err = s.UpdateTx(tx, transaction.ID.String(), transaction)
 		if err != nil {
 			return err
 		}
@@ -153,6 +150,19 @@ func (s *Service) Update(id string, transaction *Transaction) (*Transaction, err
 	return transaction, nil
 }
 
+func (s *Service) UpdateTx(tx *gorm.DB, id string, transaction *Transaction) (*Transaction, error) {
+	err := s.Validate.Struct(transaction)
+	if err != nil {
+		return nil, err
+	}
+
+	result := tx.Where("id = ?", id).Updates(&transaction)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return transaction, nil
+}
+
 func (s *Service) UpdateItem(id string, transactionItem *TransactionItem) (*TransactionItem, error) {
 	err := s.Validate.Struct(transactionItem)
 	if err != nil {
@@ -160,6 +170,19 @@ func (s *Service) UpdateItem(id string, transactionItem *TransactionItem) (*Tran
 	}
 
 	result := s.DB.Where("id = ?", id).Updates(&transactionItem)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return transactionItem, nil
+}
+
+func (s *Service) UpdateItemTx(tx *gorm.DB, id string, transactionItem *TransactionItem) (*TransactionItem, error) {
+	err := s.Validate.Struct(transactionItem)
+	if err != nil {
+		return nil, err
+	}
+
+	result := tx.Where("id = ?", id).Updates(&transactionItem)
 	if result.Error != nil {
 		return nil, result.Error
 	}

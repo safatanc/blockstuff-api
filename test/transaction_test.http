@@ -6,7 +6,7 @@ GET {{base_url}}/transaction
 Authorization: Bearer {{access_token}}
 
 ### Find Item by Slug
-GET {{base_url}}/transaction/BS-AsdbS617
+GET {{base_url}}/transaction/BS-npTxyxOgqV
 
 ### Create Transaction
 POST {{base_url}}/transaction
@@ -23,7 +23,7 @@ Content-Type: application/json
 }
 
 ### Update
-PATCH {{base_url}}/transaction/f1ca1f6a-94d9-4539-b710-03c2f782f4c9
+PATCH {{base_url}}/transaction/48d0c43c-9840-4b7d-b69e-592d3eca53a1
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
@@ -32,5 +32,5 @@ Authorization: Bearer {{access_token}}
 }
 
 ### Delete by ID
-DELETE  {{base_url}}/transaction/230c9b19-e29c-4578-9580-d8e2bcb59b47
+DELETE  {{base_url}}/transaction/b64f25e7-a36f-4a47-8fac-4404a9c6049a
 Authorization: Bearer {{access_token}}

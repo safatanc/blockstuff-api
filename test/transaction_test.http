@@ -11,7 +11,7 @@ GET {{base_url}}/transaction/BS-AsdbS617
 ### Create Transaction
 POST {{base_url}}/transaction
 Content-Type: application/json
-
+  
 {
   "minecraft_username": "agilistikmal",
   "email": "agilistikmal3@gmail.com",
@@ -32,5 +32,5 @@ Authorization: Bearer {{access_token}}
 }
 
 ### Delete by ID
-DELETE  {{base_url}}/transaction/f1ca1f6a-94d9-4539-b710-03c2f782f4c9
+DELETE  {{base_url}}/transaction/230c9b19-e29c-4578-9580-d8e2bcb59b47
 Authorization: Bearer {{access_token}}

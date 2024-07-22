@@ -42,7 +42,12 @@ func main() {
 	validate := validator.New()
 
 	// Midtrans
-	midtransCore := coreapi.Client{}
+	callbackUrl := os.Getenv("CALLBACK_URL")
+	midtransCore := &coreapi.Client{
+		Options: &midtrans.ConfigOptions{
+			PaymentOverrideNotification: &callbackUrl,
+		},
+	}
 	midtransServerKey := os.Getenv("MIDTRANS_SERVER_KEY")
 	midtransEnvironment := midtrans.Production
 	if strings.Contains(midtransServerKey, "SB") {
@@ -78,7 +83,7 @@ func main() {
 	itemRoutes.Init()
 
 	// Domain Transaction
-	transactionService := transaction.NewService(db, validate)
+	transactionService := transaction.NewService(db, validate, midtransCore)
 	transactionController := transaction.NewController(transactionService, userService, minecraftServerService)
 	transactionRoutes := transaction.NewRoutes(mux, transactionController, mw)
 	transactionRoutes.Init()

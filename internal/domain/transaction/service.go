@@ -3,22 +3,27 @@ package transaction
 import (
 	"fmt"
 	"math"
+	"os"
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/midtrans/midtrans-go"
+	"github.com/midtrans/midtrans-go/coreapi"
 	"github.com/safatanc/blockstuff-api/pkg/util"
 	"gorm.io/gorm"
 )
 
 type Service struct {
-	DB       *gorm.DB
-	Validate *validator.Validate
+	DB           *gorm.DB
+	Validate     *validator.Validate
+	MidtransCore *coreapi.Client
 }
 
-func NewService(db *gorm.DB, validate *validator.Validate) *Service {
+func NewService(db *gorm.DB, validate *validator.Validate, midtransCore *coreapi.Client) *Service {
 	return &Service{
-		DB:       db,
-		Validate: validate,
+		DB:           db,
+		Validate:     validate,
+		MidtransCore: midtransCore,
 	}
 }
 
@@ -46,6 +51,15 @@ func (s *Service) FindByCode(code string) (*Transaction, error) {
 	return transaction, nil
 }
 
+func (s *Service) FindByCodeTx(tx *gorm.DB, code string) (*Transaction, error) {
+	var transaction *Transaction
+	result := tx.Preload("TransactionItems").Preload("TransactionItems.Item").First(&transaction, "code = ?", code)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return transaction, nil
+}
+
 func (s *Service) Create(transaction *Transaction) (*Transaction, error) {
 	err := s.Validate.Struct(transaction)
 	if err != nil {
@@ -65,12 +79,12 @@ func (s *Service) Create(transaction *Transaction) (*Transaction, error) {
 		transactionCode := fmt.Sprintf("BS-%v", util.RandomString(10))
 		transaction.Code = transactionCode
 
-		result = s.DB.Create(&transaction)
+		result = tx.Create(&transaction)
 		if result.Error != nil {
 			return result.Error
 		}
 
-		transaction, err = s.FindByCode(transaction.Code)
+		transaction, err = s.FindByCodeTx(tx, transaction.Code)
 		if err != nil {
 			return err
 		}
@@ -83,6 +97,15 @@ func (s *Service) Create(transaction *Transaction) (*Transaction, error) {
 			}
 			transaction.Subtotal += transactionItem.Subtotal
 		}
+
+		//
+		// TODO: FIX NO RESPONSE
+		//
+		chargeResponse, err := s.CreatePayment(transaction)
+		if err != nil {
+			return err
+		}
+		transaction.QrisString = chargeResponse.QRString
 
 		transaction, err = s.Update(transaction.ID.String(), transaction)
 		if err != nil {
@@ -154,4 +177,43 @@ func (s *Service) Delete(id string) (*Transaction, error) {
 		return nil, result.Error
 	}
 	return transaction, nil
+}
+
+func (s *Service) CreatePayment(transaction *Transaction) (*coreapi.ChargeResponse, error) {
+	var midtransItems []midtrans.ItemDetails
+	for _, transactionItem := range transaction.TransactionItems {
+		midtransItems = append(midtransItems, midtrans.ItemDetails{
+			ID:           transactionItem.ItemID,
+			Name:         transactionItem.Item.Name,
+			Price:        transactionItem.Item.Price,
+			Qty:          int32(transactionItem.Quantity),
+			Brand:        *transactionItem.Item.MinecraftServerID,
+			Category:     transactionItem.Item.Category,
+			MerchantName: "BLOCKSTUFF",
+		})
+	}
+
+	payload := &coreapi.ChargeReq{
+		PaymentType: coreapi.PaymentTypeQris,
+		TransactionDetails: midtrans.TransactionDetails{
+			OrderID:  transaction.Code,
+			GrossAmt: transaction.Subtotal,
+		},
+		Gopay: &coreapi.GopayDetails{
+			EnableCallback: true,
+			CallbackUrl:    os.Getenv("CALLBACK_URL"),
+		},
+		Items: &midtransItems,
+		CustomerDetails: &midtrans.CustomerDetails{
+			FName: transaction.MinecraftUsername,
+			Email: transaction.Email,
+			Phone: fmt.Sprintf("%v", transaction.Phone),
+		},
+	}
+
+	chargeResponse, err := s.MidtransCore.ChargeTransaction(payload)
+	if err != nil {
+		return nil, err
+	}
+	return chargeResponse, nil
 }

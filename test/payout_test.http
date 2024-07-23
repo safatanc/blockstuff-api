@@ -1,0 +1,44 @@
+@base_url = http://localhost:5000
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE3ODMwNzksInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.w1thJpNl6CyBZSEuu0Di3sEzmEY6s3IIt22aldqueys
+
+### Find All Payouts
+GET {{base_url}}/payout
+Authorization: Bearer {{access_token}}
+
+### Find All Payouts Waiting Approval
+GET {{base_url}}/payout?status=WAITING_APPROVAL
+Authorization: Bearer {{access_token}}
+
+### Find All Payouts Approved
+GET {{base_url}}/payout?status=APPROVED
+Authorization: Bearer {{access_token}}
+
+### Find Payout by ID
+GET {{base_url}}/payout/72406b24-4e33-4fc6-9e9a-cf63f8709ff3
+Authorization: Bearer {{access_token}}
+
+### Create Payout Request
+POST {{base_url}}/payout
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "payout_transactions": [
+    {
+      "transaction_id": "48d0c43c-9840-4b7d-b69e-592d3eca53a1"
+    }
+  ]
+}
+
+### Update Payout
+PATCH {{base_url}}/payout/72406b24-4e33-4fc6-9e9a-cf63f8709ff3
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "status": "APPROVED"
+}
+
+### Delete by ID
+DELETE {{base_url}}/payout/19aee6c9-9b23-4479-b404-0811a525b19b
+Authorization: Bearer {{access_token}}

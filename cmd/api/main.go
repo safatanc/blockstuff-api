@@ -13,6 +13,7 @@ import (
 	"github.com/safatanc/blockstuff-api/internal/domain/auth"
 	"github.com/safatanc/blockstuff-api/internal/domain/item"
 	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
+	"github.com/safatanc/blockstuff-api/internal/domain/payout"
 	"github.com/safatanc/blockstuff-api/internal/domain/transaction"
 	"github.com/safatanc/blockstuff-api/internal/domain/user"
 	"github.com/safatanc/blockstuff-api/internal/middleware"
@@ -36,6 +37,7 @@ func main() {
 		&user.User{}, &minecraftserver.MinecraftServer{},
 		&item.Item{}, &item.ItemImage{}, &item.ItemAction{},
 		&transaction.Transaction{}, &transaction.TransactionItem{},
+		&payout.Payout{}, &payout.PayoutTransaction{},
 	)
 
 	// Validate
@@ -87,6 +89,12 @@ func main() {
 	transactionController := transaction.NewController(transactionService, userService, minecraftServerService)
 	transactionRoutes := transaction.NewRoutes(mux, transactionController, mw)
 	transactionRoutes.Init()
+
+	// Domain Payout
+	payoutService := payout.NewService(db, validate)
+	payoutController := payout.NewController(payoutService, userService, itemService, transactionService)
+	payoutRoutes := payout.NewRoutes(mux, payoutController, mw)
+	payoutRoutes.Init()
 
 	// Server
 	log.Printf("Running on http://localhost:%v", PORT)

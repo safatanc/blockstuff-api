@@ -1,11 +1,11 @@
 @base_url = http://localhost:5000
 @access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE2OTk4MDYsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.NgEjAsdsA0YBb6l2jeADmkSkkSLyrmVyrPcubzlWpwE
 
-### Find All Minecraft Server Items
+### Find All Transactions
 GET {{base_url}}/transaction
 Authorization: Bearer {{access_token}}
 
-### Find Item by Slug
+### Find Transaction by Code
 GET {{base_url}}/transaction/BS-npTxyxOgqV
 
 ### Create Transaction

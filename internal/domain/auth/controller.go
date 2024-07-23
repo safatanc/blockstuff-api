@@ -30,3 +30,15 @@ func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	response.Success(w, auth)
 }
+
+func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
+	var user *user.User
+	json.NewDecoder(r.Body).Decode(&user)
+
+	user, err := c.Service.Register(user)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	response.Success(w, user)
+}

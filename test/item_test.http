@@ -1,5 +1,5 @@
 @base_url = http://localhost:5000
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE2MTMyNzIsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.AkDiMZ00uYQ0wEeRls0zywAMJNz8tH2MTiYesAGsPgc
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE3OTE3MTQsInVzZXJuYW1lIjoiZ2hhbmkifQ.1QFjZFEptyho5Todd5x3rzfJ5p7wOGxzprliYTqgJE4
 
 ### Find All Minecraft Server Items
 GET {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item

@@ -12,14 +12,16 @@ import (
 )
 
 type Service struct {
-	DB       *gorm.DB
-	Validate *validator.Validate
+	DB          *gorm.DB
+	Validate    *validator.Validate
+	UserService *user.Service
 }
 
-func NewService(db *gorm.DB, validate *validator.Validate) *Service {
+func NewService(db *gorm.DB, validate *validator.Validate, userService *user.Service) *Service {
 	return &Service{
-		DB:       db,
-		Validate: validate,
+		DB:          db,
+		Validate:    validate,
+		UserService: userService,
 	}
 }
 
@@ -39,21 +41,29 @@ func (s *Service) NewToken(username string) (string, error) {
 }
 
 func (s *Service) VerifyUser(username string, password string) (*Auth, error) {
-	var u *user.User
-	result := s.DB.First(&u, "username = ?", username)
+	var user *user.User
+	result := s.DB.First(&user, "username = ?", username)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	err := converter.VerifyPassword(password, u.Password)
+	err := converter.VerifyPassword(password, user.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	tokenString, err := s.NewToken(u.Username)
+	tokenString, err := s.NewToken(user.Username)
 	if err != nil {
 		return nil, err
 	}
 	return &Auth{
 		Token: tokenString,
 	}, nil
+}
+
+func (s *Service) Register(user *user.User) (*user.User, error) {
+	user, err := s.UserService.Create(user)
+	if err != nil {
+		return nil, err
+	}
+	return user.ToResponse(), nil
 }

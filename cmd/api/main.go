@@ -60,17 +60,17 @@ func main() {
 	// Middleware
 	mw := middleware.New()
 
-	// Domain Auth
-	authService := auth.NewService(db, validate)
-	authController := auth.NewController(authService)
-	authRoutes := auth.NewRoutes(mux, authController)
-	authRoutes.Init()
-
 	// Domain User
 	userService := user.NewService(db, validate)
 	userController := user.NewController(userService)
 	userRoutes := user.NewRoutes(mux, userController, mw)
 	userRoutes.Init()
+
+	// Domain Auth
+	authService := auth.NewService(db, validate, userService)
+	authController := auth.NewController(authService)
+	authRoutes := auth.NewRoutes(mux, authController)
+	authRoutes.Init()
 
 	// Domain MinecraftServer
 	minecraftServerService := minecraftserver.NewService(db, validate)

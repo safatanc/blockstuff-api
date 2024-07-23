@@ -1,6 +1,10 @@
 package minecraftserver
 
 import (
+	"fmt"
+	"math"
+	"time"
+
 	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
@@ -54,7 +58,16 @@ func (s *Service) Create(minecraftserver *MinecraftServer) (*MinecraftServer, er
 		return nil, err
 	}
 
-	result := s.DB.Create(&minecraftserver)
+	var findMinecraftServer *MinecraftServer
+	result := s.DB.Order("created_at DESC").First(&findMinecraftServer, "author_id = ?", minecraftserver.AuthorID)
+	if result.Error == nil {
+		difference := time.Until(findMinecraftServer.CreatedAt)
+		if math.Abs(difference.Seconds()) < 60 {
+			return nil, fmt.Errorf("request limit reached. cooldown %.2f seconds", 60-math.Abs(difference.Seconds()))
+		}
+	}
+
+	result = s.DB.Create(&minecraftserver)
 	if result.Error != nil {
 		return nil, result.Error
 	}

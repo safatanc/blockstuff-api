@@ -1,25 +1,26 @@
 @base_url = http://localhost:5000
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE2MTMyNzIsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.AkDiMZ00uYQ0wEeRls0zywAMJNz8tH2MTiYesAGsPgc
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE3OTE3MTQsInVzZXJuYW1lIjoiZ2hhbmkifQ.1QFjZFEptyho5Todd5x3rzfJ5p7wOGxzprliYTqgJE4
 
 ### Find All Minecraft Servers
 GET {{base_url}}/minecraftserver
 
 ### Find Minecraft Server by IP
-GET {{base_url}}/minecraftserver/aerocraft.net
+GET {{base_url}}/minecraftserver/play.ghani.net
 
 ### Find Minecraft Server by IP with details
-GET {{base_url}}/minecraftserver/aerocraft.net/detail
+GET {{base_url}}/minecraftserver/play.ghani.net/detail
 Authorization: Bearer {{access_token}}
 
 ### Create Minecraft Server
 POST {{base_url}}/minecraftserver
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
-  "ip": "aerocraft.net",
-  "slug": "aerocraft",
-  "name": "AeroCraft",
-  "author_id": "3cc09e1f-2356-4a8d-ac8b-1dd63c3e5601"
+  "ip": "play.ghani2.net",
+  "slug": "ghani-mc2",
+  "name": "Ghani Minecraft 2",
+  "author_id": "1a45505c-2b83-4978-b28e-a65266d0730b"
 }
 
 ### Update Minecraft Server
@@ -32,16 +33,16 @@ Authorization: Bearer {{access_token}}
 }
 
 ### Update Minecraft Server Rcon
-PATCH {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/rcon
+PATCH {{base_url}}/minecraftserver/216dad35-88fb-4d83-9741-1139545c2d6b/rcon
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "ip": "rcon.aerocraft.net",
-  "port": 3333,
+  "ip": "rcon.ghani.net",
+  "port": 1234,
   "password": "RconPassword@123"
 }
 
 ### Delete Minecraft Server
-DELETE {{base_url}}/minecraftserver/c80fc4c2-8156-4790-86d5-c752f673929a
+DELETE {{base_url}}/minecraftserver/c014dadc-6c58-43f2-9cb7-5646c069e41a
 Authorization: Bearer {{access_token}}

@@ -72,7 +72,7 @@ func (s *Service) Create(transaction *Transaction) (*Transaction, error) {
 		if result.Error == nil {
 			difference := time.Until(findTransaction.CreatedAt)
 			if math.Abs(difference.Seconds()) < 60 {
-				return fmt.Errorf("request limit reached. cooldown %.2f seconds", math.Abs(difference.Seconds()))
+				return fmt.Errorf("request limit reached. cooldown %.2f seconds", 60-math.Abs(difference.Seconds()))
 			}
 		}
 

@@ -16,4 +16,5 @@ func NewRoutes(mux *http.ServeMux, controller *Controller) *Routes {
 
 func (r *Routes) Init() {
 	r.Mux.HandleFunc("POST /auth/login", r.Controller.Login)
+	r.Mux.HandleFunc("POST /auth/register", r.Controller.Register)
 }

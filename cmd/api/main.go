@@ -34,7 +34,7 @@ func main() {
 	}
 
 	db.AutoMigrate(
-		&user.User{}, &minecraftserver.MinecraftServer{},
+		&user.User{}, &minecraftserver.MinecraftServer{}, &minecraftserver.MinecraftServerRcon{},
 		&item.Item{}, &item.ItemImage{}, &item.ItemAction{},
 		&transaction.Transaction{}, &transaction.TransactionItem{},
 		&payout.Payout{}, &payout.PayoutTransaction{},

@@ -17,23 +17,23 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "ip": "play.ghani2.net",
-  "slug": "ghani-mc2",
-  "name": "Ghani Minecraft 2",
-  "author_id": "1a45505c-2b83-4978-b28e-a65266d0730b"
+  "ip": "play.ghani.net",
+  "slug": "ghani-mc",
+  "name": "Ghani Minecraft",
+  "author_id": "9f9e9db7-0881-4439-962f-55a1e56f11de"
 }
 
 ### Update Minecraft Server
-PATCH {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7
+PATCH {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "phone": "+6281346173830"
+  "name": "GhaniCraft"
 }
 
 ### Update Minecraft Server Rcon
-PATCH {{base_url}}/minecraftserver/216dad35-88fb-4d83-9741-1139545c2d6b/rcon
+PATCH {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0/rcon
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 

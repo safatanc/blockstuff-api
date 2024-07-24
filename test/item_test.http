@@ -1,8 +1,8 @@
-@base_url = http://localhost:5000
+@base_url = http://localhost:8001
 @access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE3OTE3MTQsInVzZXJuYW1lIjoiZ2hhbmkifQ.1QFjZFEptyho5Todd5x3rzfJ5p7wOGxzprliYTqgJE4
 
 ### Find All Minecraft Server Items
-GET {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item
+GET {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0/item
 
 ### Find Item by Slug
 GET {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/vip-rank

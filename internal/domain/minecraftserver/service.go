@@ -22,7 +22,7 @@ func NewService(db *gorm.DB, validate *validator.Validate) *Service {
 }
 
 func (s *Service) FindAll() []*MinecraftServer {
-	var minecraftservers []*MinecraftServer
+	var minecraftservers = make([]*MinecraftServer, 0)
 	s.DB.Find(&minecraftservers)
 
 	return minecraftservers

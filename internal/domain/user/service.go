@@ -19,7 +19,7 @@ func NewService(db *gorm.DB, validate *validator.Validate) *Service {
 }
 
 func (s *Service) FindAll() []*User {
-	var users []*User
+	var users = make([]*User, 0)
 	s.DB.Find(&users)
 
 	var userResponses []*User

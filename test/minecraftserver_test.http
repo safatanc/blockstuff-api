@@ -1,5 +1,5 @@
-@base_url = http://localhost:5000
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE3OTE3MTQsInVzZXJuYW1lIjoiZ2hhbmkifQ.1QFjZFEptyho5Todd5x3rzfJ5p7wOGxzprliYTqgJE4
+@base_url = http://localhost:8001
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE4NjgwODcsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.FMGQC8swsYpg79wTi-wiHk_TiBEAVeDLNQHbCkPF5Uk
 
 ### Find All Minecraft Servers
 GET {{base_url}}/minecraftserver

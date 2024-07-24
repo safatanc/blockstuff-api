@@ -1,4 +1,4 @@
-@base_url = http://localhost:5000
+@base_url = http://localhost:8001
 @access_token = AccessTokenHere
 
 ### Login
@@ -15,9 +15,9 @@ POST {{base_url}}/auth/register
 Content-Type: application/json
 
 {
-  "username": "ghani",
-  "email": "ghani3@gmail.com",
+  "username": "agilistikmal",
+  "email": "agilistikmal3@gmail.com",
   "phone": "+6281346173829",
-  "full_name": "Ghani Al Ghani",
+  "full_name": "Agil Ghani Istikmal",
   "password": "Rahasia123"
 }

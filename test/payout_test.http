@@ -1,5 +1,5 @@
 @base_url = http://localhost:5000
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE4NjU5OTMsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.EhITW15bNpKYaxjwLippfmNGjuhDQKpsJZjZvB435vc
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE4NzM1NzksInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.A4DC_wOP_REbAfXRVIm4LaD481KNysTr2h8HAg3am2g
 
 ### Find All Payouts
 GET {{base_url}}/payout

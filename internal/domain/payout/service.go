@@ -21,7 +21,7 @@ func NewService(db *gorm.DB, validate *validator.Validate) *Service {
 }
 
 func (s *Service) FindAll(status string) []*Payout {
-	var payouts []*Payout
+	var payouts = make([]*Payout, 0)
 	if status != "" {
 		s.DB.Preload("PayoutTransactions").Order("created_at DESC").Find(&payouts, "status = ?", status)
 	} else {

@@ -28,7 +28,7 @@ func NewService(db *gorm.DB, validate *validator.Validate, midtransCore *coreapi
 }
 
 func (s *Service) FindAll() []*Transaction {
-	var transactions []*Transaction
+	var transactions = make([]*Transaction, 0)
 	s.DB.Preload("TransactionItems").Preload("TransactionItems.Item").Order("created_at DESC").Find(&transactions)
 	return transactions
 }

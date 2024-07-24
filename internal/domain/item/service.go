@@ -20,7 +20,7 @@ func NewService(db *gorm.DB, validate *validator.Validate) *Service {
 }
 
 func (s *Service) FindAll(minecraftServerID string) []*Item {
-	var items []*Item
+	var items = make([]*Item, 0)
 	s.DB.Preload("ItemImages").Order("price ASC").Find(&items, "minecraft_server_id = ?", minecraftServerID)
 	return items
 }

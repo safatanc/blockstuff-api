@@ -1,5 +1,5 @@
 @base_url = http://localhost:5000
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE3OTE3MTQsInVzZXJuYW1lIjoiZ2hhbmkifQ.1QFjZFEptyho5Todd5x3rzfJ5p7wOGxzprliYTqgJE4
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE4NjU5OTMsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.EhITW15bNpKYaxjwLippfmNGjuhDQKpsJZjZvB435vc
 
 ### Find All Payouts
 GET {{base_url}}/payout
@@ -25,7 +25,7 @@ Authorization: Bearer {{access_token}}
 {
   "payout_transactions": [
     {
-      "transaction_id": "48d0c43c-9840-4b7d-b69e-592d3eca53a1"
+      "transaction_id": "dda06193-7030-4b91-bd58-373734c39153"
     }
   ]
 }
@@ -40,5 +40,5 @@ Authorization: Bearer {{access_token}}
 }
 
 ### Delete by ID
-DELETE {{base_url}}/payout/19aee6c9-9b23-4479-b404-0811a525b19b
+DELETE {{base_url}}/payout/88a5379a-4c9a-4ab0-9569-391cb69a0c2f
 Authorization: Bearer {{access_token}}

@@ -1,5 +1,5 @@
 @base_url = http://localhost:5000
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE2OTk4MDYsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.NgEjAsdsA0YBb6l2jeADmkSkkSLyrmVyrPcubzlWpwE
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE4NjU2OTUsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.y9oDrcECywMzokf9PcUjGUdPo_ydawQYguAGi7MED48
 
 ### Find All Transactions
 GET {{base_url}}/transaction
@@ -32,5 +32,5 @@ Authorization: Bearer {{access_token}}
 }
 
 ### Delete by ID
-DELETE  {{base_url}}/transaction/b64f25e7-a36f-4a47-8fac-4404a9c6049a
+DELETE  {{base_url}}/transaction/48d0c43c-9840-4b7d-b69e-592d3eca53a1
 Authorization: Bearer {{access_token}}

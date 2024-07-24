@@ -14,6 +14,7 @@ import (
 	"github.com/safatanc/blockstuff-api/internal/domain/item"
 	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
 	"github.com/safatanc/blockstuff-api/internal/domain/payout"
+	"github.com/safatanc/blockstuff-api/internal/domain/storage"
 	"github.com/safatanc/blockstuff-api/internal/domain/transaction"
 	"github.com/safatanc/blockstuff-api/internal/domain/user"
 	"github.com/safatanc/blockstuff-api/internal/middleware"
@@ -60,6 +61,12 @@ func main() {
 	// Middleware
 	mw := middleware.New()
 
+	// Domain Storage
+	storageService := storage.NewService()
+	storageController := storage.NewController(storageService)
+	storageRoutes := storage.NewRoutes(mux, storageController)
+	storageRoutes.Init()
+
 	// Domain User
 	userService := user.NewService(db, validate)
 	userController := user.NewController(userService)
@@ -79,7 +86,7 @@ func main() {
 	minecraftServerRoutes.Init()
 
 	// Domain Item
-	itemService := item.NewService(db, validate)
+	itemService := item.NewService(db, validate, storageService)
 	itemController := item.NewController(itemService, userService, minecraftServerService)
 	itemRoutes := item.NewRoutes(mux, itemController, mw)
 	itemRoutes.Init()

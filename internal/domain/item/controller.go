@@ -3,6 +3,8 @@ package item
 import (
 	"encoding/json"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
@@ -82,6 +84,25 @@ func (c *Controller) AddImage(w http.ResponseWriter, r *http.Request) {
 	minecraftServerID := r.PathValue("minecraft_server_id")
 	id := r.PathValue("id")
 
+	maxUploadSizeMB, err := strconv.Atoi(os.Getenv("MAX_UPLOAD_SIZE_MB"))
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	err = r.ParseMultipartForm(int64(maxUploadSizeMB))
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	uploadedImage, imageHeader, err := r.FormFile("image")
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	defer uploadedImage.Close()
+
 	claims := r.Context().Value("claims").(jwt.MapClaims)
 	claimsUsername := claims["username"].(string)
 	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
@@ -101,11 +122,7 @@ func (c *Controller) AddImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var itemImage *ItemImage
-	json.NewDecoder(r.Body).Decode(&itemImage)
-	itemImage.ItemID = id
-
-	itemImage, err = c.Service.AddImage(itemImage)
+	itemImage, err := c.Service.AddImage(id, uploadedImage, imageHeader)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return

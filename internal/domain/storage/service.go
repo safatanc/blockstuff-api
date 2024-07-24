@@ -36,6 +36,15 @@ func NewService() *Service {
 	}
 }
 
+func (s *Service) Find(objectName string) (*minio.Object, error) {
+	ctx := context.Background()
+	object, err := s.MinioClient.GetObject(ctx, s.BucketName, objectName, minio.GetObjectOptions{})
+	if err != nil {
+		return nil, err
+	}
+	return object, nil
+}
+
 func (s *Service) Upload(filename string, reader io.Reader, contentType string) (*minio.UploadInfo, error) {
 	ctx := context.Background()
 

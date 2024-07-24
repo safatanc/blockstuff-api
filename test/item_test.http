@@ -1,5 +1,5 @@
-@base_url = http://localhost:8001
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE3OTE3MTQsInVzZXJuYW1lIjoiZ2hhbmkifQ.1QFjZFEptyho5Todd5x3rzfJ5p7wOGxzprliYTqgJE4
+@base_url = http://localhost:5000
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE5MDkzMzIsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.1V6wh2buI_mXxmrR0qtFIbRyQmz8nQnWmpSBixRYELY
 
 ### Find All Minecraft Server Items
 GET {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0/item
@@ -8,7 +8,7 @@ GET {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0/item
 GET {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/vip-rank
 
 ### Create Minecraft Server Item
-POST {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item
+POST {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0/item
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
@@ -21,13 +21,17 @@ Authorization: Bearer {{access_token}}
 }
 
 ### Add Image to Item
-POST {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/2bf8a0c3-c960-4c6d-90be-63b79d226f80/image
-Content-Type: application/json
+POST {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0/item/29f6bcc2-b739-45b0-86b6-481c529a421e/image
+Content-Type: multipart/form-data; boundary=Boundary
 Authorization: Bearer {{access_token}}
 
-{
-  "url": "https://cdn.blockstuff.safatanc.com/images/blsdfawd.jpg"
-}
+---Boundary
+Content-Disposition: form-data; name="image"; filename="testing.png"
+Content-Type: image/png
+
+./stech_logo.png
+
+---Boundary
 
 ### Add Action to Item
 POST {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/2bf8a0c3-c960-4c6d-90be-63b79d226f80/action

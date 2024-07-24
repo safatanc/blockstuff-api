@@ -2,20 +2,26 @@ package item
 
 import (
 	"fmt"
+	"mime/multipart"
+	"os"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/safatanc/blockstuff-api/internal/domain/storage"
+	"github.com/safatanc/blockstuff-api/pkg/util"
 	"gorm.io/gorm"
 )
 
 type Service struct {
 	DB       *gorm.DB
 	Validate *validator.Validate
+	Storage  *storage.Service
 }
 
-func NewService(db *gorm.DB, validate *validator.Validate) *Service {
+func NewService(db *gorm.DB, validate *validator.Validate, storage *storage.Service) *Service {
 	return &Service{
 		DB:       db,
 		Validate: validate,
+		Storage:  storage,
 	}
 }
 
@@ -62,10 +68,18 @@ func (s *Service) Create(item *Item) (*Item, error) {
 	return item, nil
 }
 
-func (s *Service) AddImage(itemImage *ItemImage) (*ItemImage, error) {
-	err := s.Validate.Struct(itemImage)
+func (s *Service) AddImage(itemID string, image multipart.File, fileHeader *multipart.FileHeader) (*ItemImage, error) {
+	objectName := fmt.Sprintf("%s--%s.png", itemID, util.RandomString(12))
+	_, err := s.Storage.Upload(objectName, image, "image/*")
 	if err != nil {
 		return nil, err
+	}
+
+	url := fmt.Sprintf("%s/storage/%s", os.Getenv("BASE_URL"), objectName)
+
+	itemImage := &ItemImage{
+		URL:    url,
+		ItemID: itemID,
 	}
 
 	result := s.DB.Create(&itemImage)

@@ -25,13 +25,17 @@ POST {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0/item/29f6
 Content-Type: multipart/form-data; boundary=Boundary
 Authorization: Bearer {{access_token}}
 
----Boundary
-Content-Disposition: form-data; name="image"; filename="testing.png"
+--Boundary
+Content-Disposition: form-data; name="image"; filename="Snapshot_2024-03-04_09-10-58.png"
 Content-Type: image/png
 
-./stech_logo.png
+< /home/agilistikmal/Pictures/Snapshot_2024-03-04_09-10-58.png
 
----Boundary
+--Boundary
+
+### Delete Item Image
+DELETE  {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0/item/29f6bcc2-b739-45b0-86b6-481c529a421e/image/d5803890-2ff4-490e-8c43-f6246171222a
+Authorization: Bearer {{access_token}}
 
 ### Add Action to Item
 POST {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/2bf8a0c3-c960-4c6d-90be-63b79d226f80/action

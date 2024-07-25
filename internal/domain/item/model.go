@@ -24,11 +24,12 @@ type Item struct {
 }
 
 type ItemImage struct {
-	ID       uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id,omitempty"`
-	URL      string    `validate:"omitempty,url" json:"url"`
-	Position int       `validate:"omitempty,number,min=1" json:"position"`
-	ItemID   string    `validate:"omitempty,uuid" json:"item_id"`
-	Item     *Item     `json:"item,omitempty"`
+	ID         uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id,omitempty"`
+	ObjectName string    `json:"object_name,omitempty"`
+	URL        string    `validate:"omitempty,url" json:"url"`
+	Position   int       `validate:"omitempty,number,min=1" json:"position"`
+	ItemID     string    `validate:"omitempty,uuid" json:"item_id"`
+	Item       *Item     `json:"item,omitempty"`
 }
 
 type ItemAction struct {

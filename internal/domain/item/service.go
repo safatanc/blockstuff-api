@@ -3,7 +3,6 @@ package item
 import (
 	"fmt"
 	"mime/multipart"
-	"os"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/safatanc/blockstuff-api/internal/domain/storage"
@@ -68,28 +67,6 @@ func (s *Service) Create(item *Item) (*Item, error) {
 	return item, nil
 }
 
-func (s *Service) AddImage(itemID string, image multipart.File, fileHeader *multipart.FileHeader) (*ItemImage, error) {
-	objectName := fmt.Sprintf("%s--%s.png", itemID, util.RandomString(12))
-	_, err := s.Storage.Upload(objectName, image, "image/*")
-	if err != nil {
-		return nil, err
-	}
-
-	url := fmt.Sprintf("%s/storage/%s", os.Getenv("BASE_URL"), objectName)
-
-	itemImage := &ItemImage{
-		URL:    url,
-		ItemID: itemID,
-	}
-
-	result := s.DB.Create(&itemImage)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	return itemImage, nil
-}
-
 func (s *Service) AddAction(itemAction *ItemAction) (*ItemAction, error) {
 	err := s.Validate.Struct(itemAction)
 	if err != nil {
@@ -128,4 +105,56 @@ func (s *Service) Delete(id string) (*Item, error) {
 		return nil, result.Error
 	}
 	return item, nil
+}
+
+func (s *Service) FindImageByID(itemImageID string) (*ItemImage, error) {
+	var itemImage *ItemImage
+	result := s.DB.First(&itemImage, "id = ?", itemImageID)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return itemImage, nil
+}
+
+func (s *Service) AddImage(itemID string, image multipart.File, fileHeader *multipart.FileHeader) (*ItemImage, error) {
+	objectName := fmt.Sprintf("%s--%s.png", itemID, util.RandomString(12))
+	_, err := s.Storage.Upload(objectName, image, "image/*")
+	if err != nil {
+		return nil, err
+	}
+
+	url := fmt.Sprintf("https://cdn.safatanc.com/blockstuff/%s", objectName)
+
+	itemImage := &ItemImage{
+		URL:    url,
+		ItemID: itemID,
+	}
+
+	result := s.DB.Create(&itemImage)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return itemImage, nil
+}
+
+func (s *Service) DeleteImage(itemID string, itemImageID string) (*ItemImage, error) {
+	itemImage, err := s.FindImageByID(itemImageID)
+	if err != nil {
+		return nil, err
+	}
+
+	if itemImage.ItemID != itemID {
+		return nil, fmt.Errorf("unauthorized")
+	}
+
+	err = s.Storage.Delete(itemImage.ObjectName)
+	if err != nil {
+		return nil, err
+	}
+	result := s.DB.Where("id = ?", itemImageID).Delete(&itemImage)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return itemImage, nil
 }

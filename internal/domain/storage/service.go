@@ -36,13 +36,10 @@ func NewService() *Service {
 	}
 }
 
-func (s *Service) Find(objectName string) (*minio.Object, error) {
+func (s *Service) FindAll() <-chan minio.ObjectInfo {
 	ctx := context.Background()
-	object, err := s.MinioClient.GetObject(ctx, s.BucketName, objectName, minio.GetObjectOptions{})
-	if err != nil {
-		return nil, err
-	}
-	return object, nil
+	objects := s.MinioClient.ListObjects(ctx, s.BucketName, minio.ListObjectsOptions{})
+	return objects
 }
 
 func (s *Service) Upload(filename string, reader io.Reader, contentType string) (*minio.UploadInfo, error) {
@@ -61,9 +58,7 @@ func (s *Service) Upload(filename string, reader io.Reader, contentType string) 
 func (s *Service) Delete(filename string) error {
 	ctx := context.Background()
 
-	err := s.MinioClient.RemoveObject(ctx, s.BucketName, filename, minio.RemoveObjectOptions{
-		GovernanceBypass: true,
-	})
+	err := s.MinioClient.RemoveObject(ctx, s.BucketName, filename, minio.RemoveObjectOptions{})
 	if err != nil {
 		return err
 	}

@@ -63,9 +63,6 @@ func main() {
 
 	// Domain Storage
 	storageService := storage.NewService()
-	storageController := storage.NewController(storageService)
-	storageRoutes := storage.NewRoutes(mux, storageController)
-	storageRoutes.Init()
 
 	// Domain User
 	userService := user.NewService(db, validate)

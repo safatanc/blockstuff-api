@@ -80,56 +80,6 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, item)
 }
 
-func (c *Controller) AddImage(w http.ResponseWriter, r *http.Request) {
-	minecraftServerID := r.PathValue("minecraft_server_id")
-	id := r.PathValue("id")
-
-	maxUploadSizeMB, err := strconv.Atoi(os.Getenv("MAX_UPLOAD_SIZE_MB"))
-	if err != nil {
-		response.Error(w, util.GetErrorStatusCode(err), err.Error())
-		return
-	}
-
-	err = r.ParseMultipartForm(int64(maxUploadSizeMB))
-	if err != nil {
-		response.Error(w, util.GetErrorStatusCode(err), err.Error())
-		return
-	}
-
-	uploadedImage, imageHeader, err := r.FormFile("image")
-	if err != nil {
-		response.Error(w, util.GetErrorStatusCode(err), err.Error())
-		return
-	}
-	defer uploadedImage.Close()
-
-	claims := r.Context().Value("claims").(jwt.MapClaims)
-	claimsUsername := claims["username"].(string)
-	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
-	if err != nil {
-		response.Error(w, util.GetErrorStatusCode(err), err.Error())
-		return
-	}
-
-	minecraftserver, err := c.MinecraftServerService.FindByID(minecraftServerID)
-	if err != nil {
-		response.Error(w, util.GetErrorStatusCode(err), err.Error())
-		return
-	}
-
-	if !(claimsUser.Role == "ADMIN" || claimsUser.ID.String() == minecraftserver.AuthorID) {
-		response.Error(w, http.StatusUnauthorized, "unauthorized")
-		return
-	}
-
-	itemImage, err := c.Service.AddImage(id, uploadedImage, imageHeader)
-	if err != nil {
-		response.Error(w, util.GetErrorStatusCode(err), err.Error())
-		return
-	}
-	response.Success(w, itemImage)
-}
-
 func (c *Controller) AddAction(w http.ResponseWriter, r *http.Request) {
 	minecraftServerID := r.PathValue("minecraft_server_id")
 	id := r.PathValue("id")
@@ -235,4 +185,86 @@ func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	response.Success(w, item)
+}
+
+func (c *Controller) AddImage(w http.ResponseWriter, r *http.Request) {
+	minecraftServerID := r.PathValue("minecraft_server_id")
+	id := r.PathValue("id")
+
+	maxUploadSizeMB, err := strconv.Atoi(os.Getenv("MAX_UPLOAD_SIZE_MB"))
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	err = r.ParseMultipartForm(int64(maxUploadSizeMB))
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	uploadedImage, imageHeader, err := r.FormFile("image")
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	defer uploadedImage.Close()
+
+	claims := r.Context().Value("claims").(jwt.MapClaims)
+	claimsUsername := claims["username"].(string)
+	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	minecraftserver, err := c.MinecraftServerService.FindByID(minecraftServerID)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	if !(claimsUser.Role == "ADMIN" || claimsUser.ID.String() == minecraftserver.AuthorID) {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	itemImage, err := c.Service.AddImage(id, uploadedImage, imageHeader)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	response.Success(w, itemImage)
+}
+
+func (c *Controller) DeleteImage(w http.ResponseWriter, r *http.Request) {
+	minecraftServerID := r.PathValue("minecraft_server_id")
+	id := r.PathValue("id")
+	itemImageID := r.PathValue("item_image_id")
+
+	claims := r.Context().Value("claims").(jwt.MapClaims)
+	claimsUsername := claims["username"].(string)
+	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	minecraftserver, err := c.MinecraftServerService.FindByID(minecraftServerID)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	if !(claimsUser.Role == "ADMIN" || claimsUser.ID.String() == minecraftserver.AuthorID) {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	itemImage, err := c.Service.DeleteImage(id, itemImageID)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	response.Success(w, itemImage)
 }

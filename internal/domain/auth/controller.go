@@ -20,6 +20,9 @@ func NewController(service *Service) *Controller {
 }
 
 func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, POST")
+
 	var user *user.User
 	json.NewDecoder(r.Body).Decode(&user)
 
@@ -32,6 +35,9 @@ func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, POST")
+
 	var user *user.User
 	json.NewDecoder(r.Body).Decode(&user)
 

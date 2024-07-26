@@ -10,6 +10,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/midtrans/midtrans-go v1.3.8
 	github.com/minio/minio-go/v7 v7.0.74
+	github.com/rs/cors v1.11.0
 	golang.org/x/crypto v0.24.0
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.11
@@ -31,7 +32,6 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.8 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/minio/md5-simd v1.1.2 // indirect
-	github.com/rs/cors v1.11.0 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	golang.org/x/net v0.26.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect

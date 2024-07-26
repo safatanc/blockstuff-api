@@ -3,6 +3,8 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/rs/cors"
 )
@@ -20,6 +22,15 @@ func New(mux *http.ServeMux, port int) *Server {
 }
 
 func (s *Server) Run() error {
-	err := http.ListenAndServe(fmt.Sprintf(":%v", s.Port), cors.Default().Handler(s.Mux))
+	splittedCorsListEnv := strings.Split(os.Getenv("ALLOWED_CORS"), ",")
+	allowedCorsList := make([]string, 0)
+	allowedCorsList = append(allowedCorsList, splittedCorsListEnv...)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   allowedCorsList,
+		AllowCredentials: true,
+		// Enable Debugging for testing, consider disabling in production
+		Debug: true,
+	})
+	err := http.ListenAndServe(fmt.Sprintf(":%v", s.Port), c.Handler(s.Mux))
 	return err
 }

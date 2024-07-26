@@ -3,6 +3,8 @@ package server
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/rs/cors"
 )
 
 type Server struct {
@@ -18,6 +20,6 @@ func New(mux *http.ServeMux, port int) *Server {
 }
 
 func (s *Server) Run() error {
-	err := http.ListenAndServe(fmt.Sprintf(":%v", s.Port), s.Mux)
+	err := http.ListenAndServe(fmt.Sprintf(":%v", s.Port), cors.Default().Handler(s.Mux))
 	return err
 }

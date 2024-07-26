@@ -1,5 +1,5 @@
 @base_url = http://localhost:8001
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE4NzYxNTksInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.SsjdOfVUVjfGEgX5mnV1Zn79Z4KlwcxUibxxAnyV63A
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIwMDAxNjUsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.rmnujHUqC0gatrJe3fEHiq0CbUrVDXWblAbAr4KVFV8
 
 ### Find All Users
 GET {{base_url}}/user

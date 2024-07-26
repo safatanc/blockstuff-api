@@ -1,4 +1,4 @@
-@base_url = http://localhost:8001
+@base_url = https://blockstuff-api.safatanc.com
 @access_token = AccessTokenHere
 
 ### Login

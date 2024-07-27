@@ -19,6 +19,18 @@ func NewController(service *Service) *Controller {
 	}
 }
 
+func (c *Controller) Verify(w http.ResponseWriter, r *http.Request) {
+	var auth *Auth
+	json.NewDecoder(r.Body).Decode(&auth)
+
+	err := c.Service.VerifyToken(auth.Token)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	response.Success(w, nil)
+}
+
 func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 	var user *user.User
 	json.NewDecoder(r.Body).Decode(&user)

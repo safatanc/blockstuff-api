@@ -8,6 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/safatanc/blockstuff-api/internal/domain/user"
 	"github.com/safatanc/blockstuff-api/pkg/converter"
+	"github.com/safatanc/blockstuff-api/pkg/jwthelper"
 	"gorm.io/gorm"
 )
 
@@ -38,6 +39,11 @@ func (s *Service) NewToken(username string) (string, error) {
 	}
 
 	return tokenString, err
+}
+
+func (s *Service) VerifyToken(tokenString string) error {
+	_, err := jwthelper.VerifyToken(tokenString)
+	return err
 }
 
 func (s *Service) VerifyUser(username string, password string) (*Auth, error) {

@@ -28,6 +28,7 @@ func (s *Server) Run() error {
 	c := cors.New(cors.Options{
 		AllowedOrigins:   allowedCorsList,
 		AllowCredentials: true,
+		AllowedHeaders:   []string{"Authorization"},
 		// Enable Debugging for testing, consider disabling in production
 		Debug: true,
 	})

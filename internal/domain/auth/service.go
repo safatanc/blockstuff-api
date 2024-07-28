@@ -28,8 +28,9 @@ func NewService(db *gorm.DB, validate *validator.Validate, userService *user.Ser
 
 func (s *Service) NewToken(user *user.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user": user.ToResponse(),
-		"exp":  time.Now().Add(24 * time.Hour).Unix(),
+		"user":     user.ToResponse(),
+		"username": user.Username,
+		"exp":      time.Now().Add(24 * time.Hour).Unix(),
 	})
 
 	jwtSecret := []byte(os.Getenv("JWT_SECRET_KEY"))

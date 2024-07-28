@@ -26,10 +26,10 @@ func NewService(db *gorm.DB, validate *validator.Validate, userService *user.Ser
 	}
 }
 
-func (s *Service) NewToken(username string) (string, error) {
+func (s *Service) NewToken(user *user.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"username": username,
-		"exp":      time.Now().Add(24 * time.Hour).Unix(),
+		"user": user.ToResponse(),
+		"exp":  time.Now().Add(24 * time.Hour).Unix(),
 	})
 
 	jwtSecret := []byte(os.Getenv("JWT_SECRET_KEY"))
@@ -41,9 +41,10 @@ func (s *Service) NewToken(username string) (string, error) {
 	return tokenString, err
 }
 
-func (s *Service) VerifyToken(tokenString string) error {
-	_, err := jwthelper.VerifyToken(tokenString)
-	return err
+func (s *Service) VerifyToken(tokenString string) (*jwt.MapClaims, error) {
+	token, err := jwthelper.VerifyToken(tokenString)
+	claims := token.Claims.(jwt.MapClaims)
+	return &claims, err
 }
 
 func (s *Service) VerifyUser(username string, password string) (*Auth, error) {
@@ -57,7 +58,7 @@ func (s *Service) VerifyUser(username string, password string) (*Auth, error) {
 		return nil, err
 	}
 
-	tokenString, err := s.NewToken(user.Username)
+	tokenString, err := s.NewToken(user)
 	if err != nil {
 		return nil, err
 	}

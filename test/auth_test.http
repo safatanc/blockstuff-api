@@ -1,4 +1,4 @@
-@base_url = https://blockstuff-api.safatanc.com
+@base_url = http://localhost:5000
 @access_token = AccessTokenHere
 
 ### Login
@@ -20,4 +20,12 @@ Content-Type: application/json
   "phone": "+6281346173829",
   "full_name": "Agil Ghani Istikmal",
   "password": "Rahasia123"
+}
+
+### Verify
+POST {{base_url}}/auth/verify
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIyMTg1MjcsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.BRlx6r7Zwvm1SMFnF08PZxENNczLN4TNzX1I2x0_QV4"
 }

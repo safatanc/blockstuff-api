@@ -23,12 +23,12 @@ func (c *Controller) Verify(w http.ResponseWriter, r *http.Request) {
 	var auth *Auth
 	json.NewDecoder(r.Body).Decode(&auth)
 
-	err := c.Service.VerifyToken(auth.Token)
+	claims, err := c.Service.VerifyToken(auth.Token)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
 	}
-	response.Success(w, nil)
+	response.Success(w, claims)
 }
 
 func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {

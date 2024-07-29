@@ -1,14 +1,14 @@
-@base_url = https://blockstuff-api.safatanc.com
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIyMjUyMTgsInVzZXIiOnsiaWQiOiJhOGE5MTJkOS0yNzdlLTRlMmMtYjZhMy1jODc4Mjk4N2M2ZjMiLCJ1c2VybmFtZSI6IkFnaWxpc3Rpa21hbCIsImVtYWlsIjoiYWdpbGlzdGlrbWFsM0BnbWFpbC5jb20iLCJwaG9uZSI6Iis2MjgxMzQ2MTczODI5IiwiZnVsbF9uYW1lIjoiQWdpbCBHaGFuaSBJc3Rpa21hbCIsInJvbGUiOiJTRUxMRVIiLCJjcmVhdGVkX2F0IjoiMjAyNC0wNy0yN1QwMTozMjo0Mi4wMjg2MVoiLCJ1cGRhdGVkX2F0IjoiMjAyNC0wNy0yN1QwMTozMjo0Mi4wMjg2MVoifSwidXNlcm5hbWUiOiJBZ2lsaXN0aWttYWwifQ.vm3sEYl-0uI1dtuM4ncmM1OPtn4YfAE_TRBgG8Ovhmw
+@base_url = http://localhost:5000
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIzMDUzOTIsInVzZXIiOnsiaWQiOiI5ZjllOWRiNy0wODgxLTQ0MzktOTYyZi01NWExZTU2ZjExZGUiLCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCIsImVtYWlsIjoiYWdpbGlzdGlrbWFsM0BnbWFpbC5jb20iLCJwaG9uZSI6Iis2MjgxMzQ2MTczODI5IiwiZnVsbF9uYW1lIjoiQWdpbCBHaGFuaSBJc3Rpa21hbCIsInJvbGUiOiJBRE1JTiIsImNyZWF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCIsInVwZGF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCJ9LCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCJ9.d3HqdhWtWRaufiM6wHXA1W5ufA2uhgpdK2obbgICxUQ
 
 ### Find All Minecraft Servers
 GET {{base_url}}/minecraftserver
 
-### Find Minecraft Server by IP
-GET {{base_url}}/minecraftserver/play.ghani.net
+### Find Minecraft Server by Slug
+GET {{base_url}}/minecraftserver/bsf-craft
 
-### Find Minecraft Server by IP with details
-GET {{base_url}}/minecraftserver/safatanc-network/detail
+### Find Minecraft Server by Slug with details
+GET {{base_url}}/minecraftserver/bsf-craft/detail
 Authorization: Bearer {{access_token}}
 
 ### Create Minecraft Server
@@ -24,12 +24,14 @@ Authorization: Bearer {{access_token}}
 }
 
 ### Update Minecraft Server
-PATCH {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0
+PATCH {{base_url}}/minecraftserver/8590ca22-44ad-4096-8ae2-d996be407b75
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "name": "GhaniCraft"
+  "name": "BSF Craft",
+  "slug": "bsf-craft",
+  "ip": "play.blockstuff.space"
 }
 
 ### Update Minecraft Server Rcon

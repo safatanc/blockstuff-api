@@ -44,7 +44,7 @@ func (s *Service) FindBySlug(slug string, detail bool) (*MinecraftServer, error)
 		result = s.DB.Preload("Author").Preload("MinecraftServerRcon").First(&minecraftserver, "slug = ?", slug)
 		minecraftserver.Author = minecraftserver.Author.ToResponse()
 	} else {
-		result = s.DB.First(&minecraftserver, "ip = ?", slug)
+		result = s.DB.First(&minecraftserver, "slug = ?", slug)
 	}
 	if result.Error != nil {
 		return nil, result.Error
@@ -88,7 +88,6 @@ func (s *Service) Update(id string, minecraftserver *MinecraftServer) (*Minecraf
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	minecraftserver.Author = minecraftserver.Author.ToResponse()
 	return minecraftserver, nil
 }
 

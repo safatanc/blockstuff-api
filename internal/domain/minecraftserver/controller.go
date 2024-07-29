@@ -27,9 +27,9 @@ func (c *Controller) FindAll(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, minecraftservers)
 }
 
-func (c *Controller) FindByIP(w http.ResponseWriter, r *http.Request) {
-	ip := r.PathValue("ip")
-	minecraftserver, err := c.Service.FindByIP(ip, false)
+func (c *Controller) FindBySlug(w http.ResponseWriter, r *http.Request) {
+	slug := r.PathValue("slug")
+	minecraftserver, err := c.Service.FindBySlug(slug, false)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
@@ -37,7 +37,7 @@ func (c *Controller) FindByIP(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, minecraftserver)
 }
 
-func (c *Controller) FindByIPDetail(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) FindBySlugDetail(w http.ResponseWriter, r *http.Request) {
 	claims := r.Context().Value("claims").(jwt.MapClaims)
 	claimsUsername := claims["username"].(string)
 	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
@@ -46,8 +46,8 @@ func (c *Controller) FindByIPDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ip := r.PathValue("ip")
-	minecraftserver, err := c.Service.FindByIP(ip, true)
+	slug := r.PathValue("slug")
+	minecraftserver, err := c.Service.FindBySlug(slug, true)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return

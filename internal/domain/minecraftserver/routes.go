@@ -22,8 +22,8 @@ func NewRoutes(mux *http.ServeMux, controller *Controller, middleware *middlewar
 
 func (r *Routes) Init() {
 	r.Mux.HandleFunc("GET /minecraftserver", r.Controller.FindAll)
-	r.Mux.HandleFunc("GET /minecraftserver/{ip}", r.Controller.FindByIP)
-	r.Mux.Handle("GET /minecraftserver/{ip}/detail", r.Middleware.Auth(http.HandlerFunc(r.Controller.FindByIPDetail)))
+	r.Mux.HandleFunc("GET /minecraftserver/{slug}", r.Controller.FindBySlug)
+	r.Mux.Handle("GET /minecraftserver/{slug}/detail", r.Middleware.Auth(http.HandlerFunc(r.Controller.FindBySlugDetail)))
 	r.Mux.Handle("POST /minecraftserver", r.Middleware.Auth(http.HandlerFunc(r.Controller.Create)))
 	r.Mux.Handle("PATCH /minecraftserver/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Update)))
 	r.Mux.Handle("PATCH /minecraftserver/{id}/rcon", r.Middleware.Auth(http.HandlerFunc(r.Controller.UpdateRcon)))

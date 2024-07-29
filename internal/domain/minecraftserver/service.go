@@ -37,14 +37,14 @@ func (s *Service) FindByID(id string) (*MinecraftServer, error) {
 	return minecraftserver, nil
 }
 
-func (s *Service) FindByIP(ip string, detail bool) (*MinecraftServer, error) {
+func (s *Service) FindBySlug(slug string, detail bool) (*MinecraftServer, error) {
 	var minecraftserver *MinecraftServer
 	var result *gorm.DB
 	if detail {
-		result = s.DB.Preload("Author").Preload("MinecraftServerRcon").First(&minecraftserver, "ip = ?", ip)
+		result = s.DB.Preload("Author").Preload("MinecraftServerRcon").First(&minecraftserver, "slug = ?", slug)
 		minecraftserver.Author = minecraftserver.Author.ToResponse()
 	} else {
-		result = s.DB.First(&minecraftserver, "ip = ?", ip)
+		result = s.DB.First(&minecraftserver, "ip = ?", slug)
 	}
 	if result.Error != nil {
 		return nil, result.Error

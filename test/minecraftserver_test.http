@@ -1,5 +1,5 @@
-@base_url = http://localhost:8001
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIyMjE2NjAsInVzZXIiOnsiaWQiOiI5ZjllOWRiNy0wODgxLTQ0MzktOTYyZi01NWExZTU2ZjExZGUiLCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCIsImVtYWlsIjoiYWdpbGlzdGlrbWFsM0BnbWFpbC5jb20iLCJwaG9uZSI6Iis2MjgxMzQ2MTczODI5IiwiZnVsbF9uYW1lIjoiQWdpbCBHaGFuaSBJc3Rpa21hbCIsInJvbGUiOiJBRE1JTiIsImNyZWF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCIsInVwZGF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCJ9fQ.SLZ0OS5X4vru-MdreQOP6eo__rbr1blb_Fjft4gWWNk
+@base_url = https://blockstuff-api.safatanc.com
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIyMjUyMTgsInVzZXIiOnsiaWQiOiJhOGE5MTJkOS0yNzdlLTRlMmMtYjZhMy1jODc4Mjk4N2M2ZjMiLCJ1c2VybmFtZSI6IkFnaWxpc3Rpa21hbCIsImVtYWlsIjoiYWdpbGlzdGlrbWFsM0BnbWFpbC5jb20iLCJwaG9uZSI6Iis2MjgxMzQ2MTczODI5IiwiZnVsbF9uYW1lIjoiQWdpbCBHaGFuaSBJc3Rpa21hbCIsInJvbGUiOiJTRUxMRVIiLCJjcmVhdGVkX2F0IjoiMjAyNC0wNy0yN1QwMTozMjo0Mi4wMjg2MVoiLCJ1cGRhdGVkX2F0IjoiMjAyNC0wNy0yN1QwMTozMjo0Mi4wMjg2MVoifSwidXNlcm5hbWUiOiJBZ2lsaXN0aWttYWwifQ.vm3sEYl-0uI1dtuM4ncmM1OPtn4YfAE_TRBgG8Ovhmw
 
 ### Find All Minecraft Servers
 GET {{base_url}}/minecraftserver
@@ -8,7 +8,7 @@ GET {{base_url}}/minecraftserver
 GET {{base_url}}/minecraftserver/play.ghani.net
 
 ### Find Minecraft Server by IP with details
-GET {{base_url}}/minecraftserver/play.ghani.net/detail
+GET {{base_url}}/minecraftserver/safatanc-network/detail
 Authorization: Bearer {{access_token}}
 
 ### Create Minecraft Server

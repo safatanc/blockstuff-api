@@ -29,6 +29,7 @@ func (s *Server) Run() error {
 		AllowedOrigins:   allowedCorsList,
 		AllowCredentials: true,
 		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowedMethods:   []string{"GET", "PUT", "POST", "PATCH", "DELETE"},
 		// Enable Debugging for testing, consider disabling in production
 		Debug: true,
 	})

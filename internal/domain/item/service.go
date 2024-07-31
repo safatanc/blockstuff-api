@@ -3,6 +3,7 @@ package item
 import (
 	"fmt"
 	"mime/multipart"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/safatanc/blockstuff-api/internal/domain/storage"
@@ -126,8 +127,9 @@ func (s *Service) AddImage(itemID string, image multipart.File, fileHeader *mult
 	url := fmt.Sprintf("https://cdn.safatanc.com/blockstuff/%s", objectName)
 
 	itemImage := &ItemImage{
-		URL:    url,
-		ItemID: itemID,
+		URL:        url,
+		ItemID:     itemID,
+		ObjectName: objectName,
 	}
 
 	result := s.DB.Create(&itemImage)
@@ -146,6 +148,11 @@ func (s *Service) DeleteImage(itemID string, itemImageID string) (*ItemImage, er
 
 	if itemImage.ItemID != itemID {
 		return nil, fmt.Errorf("unauthorized")
+	}
+
+	if itemImage.ObjectName == "" {
+		splittedUrl := strings.Split(itemImage.URL, "/")
+		itemImage.ObjectName = splittedUrl[len(splittedUrl)-1]
 	}
 
 	err = s.Storage.Delete(itemImage.ObjectName)

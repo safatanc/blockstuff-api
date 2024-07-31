@@ -1,14 +1,14 @@
 @base_url = http://localhost:5000
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE5MDkzMzIsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.1V6wh2buI_mXxmrR0qtFIbRyQmz8nQnWmpSBixRYELY
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIzMjgxNTAsInVzZXIiOnsiaWQiOiI5ZjllOWRiNy0wODgxLTQ0MzktOTYyZi01NWExZTU2ZjExZGUiLCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCIsImVtYWlsIjoiYWdpbGlzdGlrbWFsM0BnbWFpbC5jb20iLCJwaG9uZSI6Iis2MjgxMzQ2MTczODI5IiwiZnVsbF9uYW1lIjoiQWdpbCBHaGFuaSBJc3Rpa21hbCIsInJvbGUiOiJBRE1JTiIsImNyZWF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCIsInVwZGF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCJ9LCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCJ9.CXF-UkmbWkRKPfUIibpm7Tc4bLiIULzrM4_y7XvFSyg
 
 ### Find All Minecraft Server Items
-GET {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0/item
+GET {{base_url}}/minecraftserver/bsf-craft/item
 
 ### Find Item by Slug
-GET {{base_url}}/minecraftserver/3c0c231b-da0c-46e6-af19-3fb7349d66a7/item/vip-rank
+GET {{base_url}}/minecraftserver/bsf-craft/item/vip-rank
 
 ### Create Minecraft Server Item
-POST {{base_url}}/minecraftserver/77af08ee-7f83-4d40-8fde-bb50ae1801f0/item
+POST {{base_url}}/minecraftserver/8590ca22-44ad-4096-8ae2-d996be407b75/item
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 

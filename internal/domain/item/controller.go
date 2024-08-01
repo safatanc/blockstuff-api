@@ -268,3 +268,35 @@ func (c *Controller) DeleteImage(w http.ResponseWriter, r *http.Request) {
 	}
 	response.Success(w, itemImage)
 }
+
+func (c *Controller) DeleteAction(w http.ResponseWriter, r *http.Request) {
+	minecraftServerID := r.PathValue("minecraft_server_id")
+	id := r.PathValue("id")
+	itemActionID := r.PathValue("item_action_id")
+
+	claims := r.Context().Value("claims").(jwt.MapClaims)
+	claimsUsername := claims["username"].(string)
+	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	minecraftserver, err := c.MinecraftServerService.FindByID(minecraftServerID)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	if !(claimsUser.Role == "ADMIN" || claimsUser.ID.String() == minecraftserver.AuthorID) {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	itemAction, err := c.Service.DeleteAction(id, itemActionID)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	response.Success(w, itemAction)
+}

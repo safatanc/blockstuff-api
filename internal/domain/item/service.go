@@ -68,6 +68,15 @@ func (s *Service) Create(item *Item) (*Item, error) {
 	return item, nil
 }
 
+func (s *Service) FindActionByID(itemActionID string) (*ItemAction, error) {
+	var itemAction *ItemAction
+	result := s.DB.First(&itemAction, "id = ?", itemActionID)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return itemAction, nil
+}
+
 func (s *Service) AddAction(itemAction *ItemAction) (*ItemAction, error) {
 	err := s.Validate.Struct(itemAction)
 	if err != nil {
@@ -164,4 +173,21 @@ func (s *Service) DeleteImage(itemID string, itemImageID string) (*ItemImage, er
 		return nil, result.Error
 	}
 	return itemImage, nil
+}
+
+func (s *Service) DeleteAction(itemID string, itemActionID string) (*ItemAction, error) {
+	itemAction, err := s.FindActionByID(itemActionID)
+	if err != nil {
+		return nil, err
+	}
+
+	if itemAction.ItemID != itemID {
+		return nil, fmt.Errorf("unauthorized")
+	}
+
+	result := s.DB.Where("id = ?", itemActionID).Delete(&itemAction)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return itemAction, nil
 }

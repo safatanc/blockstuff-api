@@ -27,5 +27,6 @@ func (r *Routes) Init() {
 	r.Mux.Handle("POST /minecraftserver", r.Middleware.Auth(http.HandlerFunc(r.Controller.Create)))
 	r.Mux.Handle("PATCH /minecraftserver/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Update)))
 	r.Mux.Handle("PATCH /minecraftserver/{id}/rcon", r.Middleware.Auth(http.HandlerFunc(r.Controller.UpdateRcon)))
+	r.Mux.Handle("PATCH /minecraftserver/{id}/logo", r.Middleware.Auth(http.HandlerFunc(r.Controller.UpdateLogo)))
 	r.Mux.Handle("DELETE /minecraftserver/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Delete)))
 }

@@ -3,21 +3,25 @@ package minecraftserver
 import (
 	"fmt"
 	"math"
+	"mime/multipart"
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/safatanc/blockstuff-api/internal/domain/storage"
 	"gorm.io/gorm"
 )
 
 type Service struct {
 	DB       *gorm.DB
 	Validate *validator.Validate
+	Storage  *storage.Service
 }
 
-func NewService(db *gorm.DB, validate *validator.Validate) *Service {
+func NewService(db *gorm.DB, validate *validator.Validate, storage *storage.Service) *Service {
 	return &Service{
 		DB:       db,
 		Validate: validate,
+		Storage:  storage,
 	}
 }
 
@@ -125,5 +129,33 @@ func (s *Service) UpdateRcon(rcon *MinecraftServerRcon) (*MinecraftServer, error
 	s.DB.Preload("Author").Preload("MinecraftServerRcon").First(&minecraftserver, "id = ?", rcon.MinecraftServerID)
 
 	minecraftserver.Author = minecraftserver.Author.ToResponse()
+	return minecraftserver, nil
+}
+
+func (s *Service) UpdateLogo(id string, image multipart.File, fileHeader *multipart.FileHeader) (*MinecraftServer, error) {
+	objectName := fmt.Sprintf("%s--logo.png", id)
+
+	_, err := s.Storage.FindByObjectName(objectName)
+	if err == nil {
+		err = s.Storage.Delete(objectName)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	_, err = s.Storage.Upload(objectName, image, "image/*")
+	if err != nil {
+		return nil, err
+	}
+
+	url := fmt.Sprintf("https://cdn.safatanc.com/blockstuff/%s", objectName)
+	minecraftserver := &MinecraftServer{
+		Logo: &url,
+	}
+	result := s.DB.Where("minecraft_server_id = ?", id).Updates(&minecraftserver)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
 	return minecraftserver, nil
 }

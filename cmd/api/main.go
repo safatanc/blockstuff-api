@@ -77,7 +77,7 @@ func main() {
 	authRoutes.Init()
 
 	// Domain MinecraftServer
-	minecraftServerService := minecraftserver.NewService(db, validate)
+	minecraftServerService := minecraftserver.NewService(db, validate, storageService)
 	minecraftServerController := minecraftserver.NewController(minecraftServerService, userService)
 	minecraftServerRoutes := minecraftserver.NewRoutes(mux, minecraftServerController, mw)
 	minecraftServerRoutes.Init()

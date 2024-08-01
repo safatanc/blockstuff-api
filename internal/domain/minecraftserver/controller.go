@@ -3,6 +3,8 @@ package minecraftserver
 import (
 	"encoding/json"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/safatanc/blockstuff-api/internal/domain/user"
@@ -160,6 +162,55 @@ func (c *Controller) UpdateRcon(w http.ResponseWriter, r *http.Request) {
 	rcon.MinecraftServerID = id
 
 	minecraftserver, err = c.Service.UpdateRcon(rcon)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	response.Success(w, minecraftserver)
+}
+
+func (c *Controller) UpdateLogo(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+
+	maxUploadSizeMB, err := strconv.Atoi(os.Getenv("MAX_UPLOAD_SIZE_MB"))
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	err = r.ParseMultipartForm(int64(maxUploadSizeMB))
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	uploadedImage, imageHeader, err := r.FormFile("image")
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	defer uploadedImage.Close()
+
+	claims := r.Context().Value("claims").(jwt.MapClaims)
+	claimsUsername := claims["username"].(string)
+	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	minecraftserver, err := c.Service.FindByID(id)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	if !(claimsUser.Role == "ADMIN" || claimsUser.ID.String() == minecraftserver.AuthorID) {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	minecraftserver, err = c.Service.UpdateLogo(id, uploadedImage, imageHeader)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return

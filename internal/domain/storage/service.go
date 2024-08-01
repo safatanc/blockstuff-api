@@ -42,6 +42,12 @@ func (s *Service) FindAll() <-chan minio.ObjectInfo {
 	return objects
 }
 
+func (s *Service) FindByObjectName(objectName string) (*minio.Object, error) {
+	ctx := context.Background()
+	object, err := s.MinioClient.GetObject(ctx, s.BucketName, objectName, minio.GetObjectOptions{})
+	return object, err
+}
+
 func (s *Service) Upload(filename string, reader io.Reader, contentType string) (*minio.UploadInfo, error) {
 	ctx := context.Background()
 

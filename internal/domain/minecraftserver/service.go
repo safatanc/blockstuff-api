@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"math"
 	"mime/multipart"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/safatanc/blockstuff-api/internal/domain/storage"
+	"github.com/safatanc/blockstuff-api/pkg/util"
 	"gorm.io/gorm"
 )
 
@@ -133,15 +135,25 @@ func (s *Service) UpdateRcon(rcon *MinecraftServerRcon) (*MinecraftServer, error
 }
 
 func (s *Service) UpdateLogo(id string, image multipart.File, fileHeader *multipart.FileHeader) (*MinecraftServer, error) {
-	objectName := fmt.Sprintf("%s--logo.png", id)
+	minecraftserver, err := s.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
 
-	_, err := s.Storage.FindByObjectName(objectName)
-	if err == nil {
-		err = s.Storage.Delete(objectName)
-		if err != nil {
-			return nil, err
+	if minecraftserver.Logo != nil {
+		splittedUrl := strings.Split(*minecraftserver.Logo, "/")
+		currentObjectName := splittedUrl[len(splittedUrl)-1]
+
+		_, err = s.Storage.FindByObjectName(currentObjectName)
+		if err == nil {
+			err := s.Storage.Delete(currentObjectName)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
+
+	objectName := fmt.Sprintf("%s--%s.png", id, util.RandomString(4))
 
 	_, err = s.Storage.Upload(objectName, image, "image/*")
 	if err != nil {
@@ -149,10 +161,10 @@ func (s *Service) UpdateLogo(id string, image multipart.File, fileHeader *multip
 	}
 
 	url := fmt.Sprintf("https://cdn.safatanc.com/blockstuff/%s", objectName)
-	minecraftserver := &MinecraftServer{
+	minecraftserver = &MinecraftServer{
 		Logo: &url,
 	}
-	result := s.DB.Where("minecraft_server_id = ?", id).Updates(&minecraftserver)
+	result := s.DB.Where("id = ?", id).Updates(&minecraftserver)
 	if result.Error != nil {
 		return nil, result.Error
 	}

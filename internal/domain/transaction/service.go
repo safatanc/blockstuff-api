@@ -1,29 +1,32 @@
 package transaction
 
 import (
+	"context"
 	"fmt"
 	"math"
-	"os"
 	"time"
 
+	_ "image/jpeg"
+	_ "image/png"
+
 	"github.com/go-playground/validator/v10"
-	"github.com/midtrans/midtrans-go"
-	"github.com/midtrans/midtrans-go/coreapi"
 	"github.com/safatanc/blockstuff-api/pkg/util"
+	"github.com/xendit/xendit-go/v6"
+	"github.com/xendit/xendit-go/v6/payment_request"
 	"gorm.io/gorm"
 )
 
 type Service struct {
 	DB           *gorm.DB
 	Validate     *validator.Validate
-	MidtransCore *coreapi.Client
+	XenditClient *xendit.APIClient
 }
 
-func NewService(db *gorm.DB, validate *validator.Validate, midtransCore *coreapi.Client) *Service {
+func NewService(db *gorm.DB, validate *validator.Validate, xenditClient *xendit.APIClient) *Service {
 	return &Service{
 		DB:           db,
 		Validate:     validate,
-		MidtransCore: midtransCore,
+		XenditClient: xenditClient,
 	}
 }
 
@@ -98,11 +101,13 @@ func (s *Service) Create(transaction *Transaction) (*Transaction, error) {
 			transaction.Subtotal += transactionItem.Subtotal
 		}
 
-		chargeResponse, err := s.CreatePayment(transaction)
+		paymentResponse, err := s.CreatePayment(transaction)
 		if err != nil {
 			return err
 		}
-		transaction.QrisString = chargeResponse.QRString
+
+		transaction.PaymentID = &paymentResponse.Id
+		transaction.QrisString = paymentResponse.PaymentMethod.GetQrCode().ChannelProperties.GetQrString()
 
 		transaction, err = s.UpdateTx(tx, transaction.ID.String(), transaction)
 		if err != nil {
@@ -202,41 +207,40 @@ func (s *Service) Delete(id string) (*Transaction, error) {
 	return transaction, nil
 }
 
-func (s *Service) CreatePayment(transaction *Transaction) (*coreapi.ChargeResponse, error) {
-	var midtransItems []midtrans.ItemDetails
+func (s *Service) CreatePayment(transaction *Transaction) (*payment_request.PaymentRequest, error) {
+	var xenditItems []payment_request.PaymentRequestBasketItem
 	for _, transactionItem := range transaction.TransactionItems {
-		midtransItems = append(midtransItems, midtrans.ItemDetails{
-			ID:           transactionItem.ItemID,
-			Name:         transactionItem.Item.Name,
-			Price:        transactionItem.Item.Price,
-			Qty:          int32(transactionItem.Quantity),
-			Brand:        *transactionItem.Item.MinecraftServerID,
-			Category:     transactionItem.Item.Category,
-			MerchantName: "BLOCKSTUFF",
+		xenditItems = append(xenditItems, payment_request.PaymentRequestBasketItem{
+			ReferenceId: &transactionItem.ItemID,
+			Name:        transactionItem.Item.Name,
+			Price:       float64(transactionItem.Item.Price),
+			Currency:    "IDR",
+			Quantity:    float64(transactionItem.Quantity),
+			Type:        &transactionItem.Item.Category,
 		})
 	}
 
-	payload := &coreapi.ChargeReq{
-		PaymentType: coreapi.PaymentTypeQris,
-		TransactionDetails: midtrans.TransactionDetails{
-			OrderID:  transaction.Code,
-			GrossAmt: transaction.Subtotal,
-		},
-		Gopay: &coreapi.GopayDetails{
-			EnableCallback: true,
-			CallbackUrl:    os.Getenv("CALLBACK_URL"),
-		},
-		Items: &midtransItems,
-		CustomerDetails: &midtrans.CustomerDetails{
-			FName: transaction.MinecraftUsername,
-			Email: transaction.Email,
-			Phone: fmt.Sprintf("%v", transaction.Phone),
+	transactionAmount := float64(transaction.Subtotal)
+
+	payload := payment_request.PaymentRequestParameters{
+		ReferenceId: &transaction.Code,
+		Amount:      &transactionAmount,
+		Currency:    payment_request.PAYMENTREQUESTCURRENCY_IDR,
+		PaymentMethod: payment_request.NewPaymentMethodParameters(
+			payment_request.PAYMENTMETHODTYPE_QR_CODE,
+			payment_request.PAYMENTMETHODREUSABILITY_ONE_TIME_USE,
+		),
+		Items: xenditItems,
+		Metadata: map[string]interface{}{
+			"minecraft_username": transaction.MinecraftUsername,
+			"email":              transaction.Email,
+			"phone":              fmt.Sprintf("%v", transaction.Phone),
 		},
 	}
 
-	chargeResponse, err := s.MidtransCore.ChargeTransaction(payload)
+	paymentResponse, _, err := s.XenditClient.PaymentRequestApi.CreatePaymentRequest(context.Background()).PaymentRequestParameters(payload).Execute()
 	if err != nil {
 		return nil, err
 	}
-	return chargeResponse, nil
+	return paymentResponse, nil
 }

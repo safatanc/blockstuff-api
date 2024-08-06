@@ -1,9 +1,10 @@
 @base_url = http://localhost:5000
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE4NjU2OTUsInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.y9oDrcECywMzokf9PcUjGUdPo_ydawQYguAGi7MED48
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjI5OTExNzIsInVzZXIiOnsiaWQiOiI5ZjllOWRiNy0wODgxLTQ0MzktOTYyZi01NWExZTU2ZjExZGUiLCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCIsImVtYWlsIjoiYWdpbGlzdGlrbWFsM0BnbWFpbC5jb20iLCJwaG9uZSI6Iis2MjgxMzQ2MTczODI5IiwiZnVsbF9uYW1lIjoiQWdpbCBHaGFuaSBJc3Rpa21hbCIsInJvbGUiOiJBRE1JTiIsImNyZWF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCIsInVwZGF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCJ9LCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCJ9.4Tu3fFO6y5Km4gJAgVtPQ0ELVsw6i4sdetOHXryA_Ns
 
 ### Find All Transactions
 GET {{base_url}}/transaction
 Authorization: Bearer {{access_token}}
+Origin: http://localhost:3000
 
 ### Find Transaction by Code
 GET {{base_url}}/transaction/BS-npTxyxOgqV
@@ -11,13 +12,13 @@ GET {{base_url}}/transaction/BS-npTxyxOgqV
 ### Create Transaction
 POST {{base_url}}/transaction
 Content-Type: application/json
-  
+
 {
   "minecraft_username": "agilistikmal",
   "email": "agilistikmal3@gmail.com",
   "transaction_items": [
     {
-      "item_id": "2bf8a0c3-c960-4c6d-90be-63b79d226f80"
+      "item_id": "23b825eb-81a9-48e9-a355-7d39c3564fe1"
     }
   ]
 }

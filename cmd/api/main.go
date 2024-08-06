@@ -4,13 +4,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
-	"github.com/midtrans/midtrans-go"
-	"github.com/midtrans/midtrans-go/coreapi"
 	"github.com/safatanc/blockstuff-api/internal/domain/auth"
+	"github.com/safatanc/blockstuff-api/internal/domain/callback"
 	"github.com/safatanc/blockstuff-api/internal/domain/item"
 	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
 	"github.com/safatanc/blockstuff-api/internal/domain/payout"
@@ -19,6 +17,7 @@ import (
 	"github.com/safatanc/blockstuff-api/internal/domain/user"
 	"github.com/safatanc/blockstuff-api/internal/middleware"
 	"github.com/safatanc/blockstuff-api/internal/server"
+	"github.com/xendit/xendit-go/v6"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -34,29 +33,21 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// db.AutoMigrate(
+	// 	&user.User{}, &minecraftserver.MinecraftServer{}, &minecraftserver.MinecraftServerRcon{},
+	// 	&item.Item{}, &item.ItemImage{}, &item.ItemAction{},
+	// 	&transaction.Transaction{}, &transaction.TransactionItem{},
+	// 	&payout.Payout{}, &payout.PayoutTransaction{},
+	// )
 	db.AutoMigrate(
-		&user.User{}, &minecraftserver.MinecraftServer{}, &minecraftserver.MinecraftServerRcon{},
-		&item.Item{}, &item.ItemImage{}, &item.ItemAction{},
-		&transaction.Transaction{}, &transaction.TransactionItem{},
-		&payout.Payout{}, &payout.PayoutTransaction{},
+		&transaction.Transaction{},
 	)
 
 	// Validate
 	validate := validator.New()
 
-	// Midtrans
-	callbackUrl := os.Getenv("CALLBACK_URL")
-	midtransCore := &coreapi.Client{
-		Options: &midtrans.ConfigOptions{
-			PaymentOverrideNotification: &callbackUrl,
-		},
-	}
-	midtransServerKey := os.Getenv("MIDTRANS_SERVER_KEY")
-	midtransEnvironment := midtrans.Production
-	if strings.Contains(midtransServerKey, "SB") {
-		midtransEnvironment = midtrans.Sandbox
-	}
-	midtransCore.New(midtransServerKey, midtransEnvironment)
+	// Xendit
+	xenditClient := xendit.NewClient(os.Getenv("XENDIT_SECRET_KEY"))
 
 	// Middleware
 	mw := middleware.New()
@@ -89,7 +80,7 @@ func main() {
 	itemRoutes.Init()
 
 	// Domain Transaction
-	transactionService := transaction.NewService(db, validate, midtransCore)
+	transactionService := transaction.NewService(db, validate, xenditClient)
 	transactionController := transaction.NewController(transactionService, userService, minecraftServerService)
 	transactionRoutes := transaction.NewRoutes(mux, transactionController, mw)
 	transactionRoutes.Init()
@@ -99,6 +90,12 @@ func main() {
 	payoutController := payout.NewController(payoutService, userService, itemService, transactionService)
 	payoutRoutes := payout.NewRoutes(mux, payoutController, mw)
 	payoutRoutes.Init()
+
+	// Domain Callback
+	callbackService := callback.NewService(db, minecraftServerService, itemService)
+	callbackController := callback.NewController(callbackService)
+	callbackRoutes := callback.NewRoutes(mux, callbackController)
+	callbackRoutes.Init()
 
 	// Server
 	log.Printf("Running on http://localhost:%v", PORT)

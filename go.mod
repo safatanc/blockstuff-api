@@ -6,11 +6,13 @@ require (
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
+	github.com/gorcon/rcon v1.3.5
 	github.com/jackc/pgx/v5 v5.5.5
 	github.com/joho/godotenv v1.5.1
-	github.com/midtrans/midtrans-go v1.3.8
+	github.com/makiuchi-d/gozxing v0.1.1
 	github.com/minio/minio-go/v7 v7.0.74
 	github.com/rs/cors v1.11.0
+	github.com/xendit/xendit-go/v6 v6.0.0-20240801082904-6d99757ad011
 	golang.org/x/crypto v0.24.0
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.11
@@ -37,4 +39,5 @@ require (
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.21.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 )

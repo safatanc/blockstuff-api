@@ -10,6 +10,7 @@ import (
 type Transaction struct {
 	ID                uuid.UUID          `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id,omitempty"`
 	Code              string             `gorm:"unique" json:"code"`
+	PaymentID         *string            `json:"payment_id,omitempty"`
 	MinecraftUsername string             `validate:"required,min=3,max=16" json:"minecraft_username"`
 	Email             string             `validate:"required,email" json:"email"`
 	Phone             *string            `validate:"omitempty,e164" json:"phone"`

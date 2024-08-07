@@ -1,20 +1,26 @@
 package user
 
 import (
+	"fmt"
+
 	"github.com/go-playground/validator/v10"
+	"github.com/safatanc/blockstuff-api/internal/domain/mail"
 	"github.com/safatanc/blockstuff-api/pkg/converter"
+	"github.com/safatanc/blockstuff-api/pkg/util"
 	"gorm.io/gorm"
 )
 
 type Service struct {
-	DB       *gorm.DB
-	Validate *validator.Validate
+	DB          *gorm.DB
+	Validate    *validator.Validate
+	MailService *mail.Service
 }
 
-func NewService(db *gorm.DB, validate *validator.Validate) *Service {
+func NewService(db *gorm.DB, validate *validator.Validate, mailService *mail.Service) *Service {
 	return &Service{
-		DB:       db,
-		Validate: validate,
+		DB:          db,
+		Validate:    validate,
+		MailService: mailService,
 	}
 }
 
@@ -59,11 +65,25 @@ func (s *Service) Create(user *User) (*User, error) {
 		return nil, err
 	}
 
-	user.Password = hashPassword
+	emailVerifyCode := util.RandomString(5)
 
-	result := s.DB.Create(&user)
-	if result.Error != nil {
-		return nil, result.Error
+	user.Password = hashPassword
+	user.EmailVerifyCode = &emailVerifyCode
+
+	err = s.DB.Transaction(func(tx *gorm.DB) error {
+		result := tx.Create(&user)
+		if result.Error != nil {
+			return result.Error
+		}
+
+		err := s.MailService.Send([]string{user.Email}, "Verify Email", fmt.Sprintf("Kode Verifikasi: %v", *user.EmailVerifyCode))
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
 
 	return user.ToResponse(), nil

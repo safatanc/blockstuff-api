@@ -15,10 +15,9 @@ POST {{base_url}}/auth/register
 Content-Type: application/json
 
 {
-  "username": "agilistikmal",
-  "email": "agilistikmal3@gmail.com",
-  "phone": "+6281346173829",
-  "full_name": "Agil Ghani Istikmal",
+  "username": "asasa",
+  "email": "zaghi2110@gmail.com",
+  "full_name": "Zaghi",
   "password": "Rahasia123"
 }
 
@@ -30,3 +29,6 @@ Origin: http://localhost:3000
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIzMDUxNjgsInVzZXIiOnsiaWQiOiI5ZjllOWRiNy0wODgxLTQ0MzktOTYyZi01NWExZTU2ZjExZGUiLCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCIsImVtYWlsIjoiYWdpbGlzdGlrbWFsM0BnbWFpbC5jb20iLCJwaG9uZSI6Iis2MjgxMzQ2MTczODI5IiwiZnVsbF9uYW1lIjoiQWdpbCBHaGFuaSBJc3Rpa21hbCIsInJvbGUiOiJBRE1JTiIsImNyZWF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCIsInVwZGF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCJ9LCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCJ9.n19bJfBccfH-BhhTgsdvHyx69bLcqod3VbxvRilvnUo"
 }
+
+### Verify Email
+GET {{base_url}}/auth/verify/email/c9c05c79-8f5f-40f4-950d-79af6d370351/ePGyV

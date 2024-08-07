@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -59,6 +60,10 @@ func (s *Service) VerifyUser(username string, password string) (*Auth, error) {
 		return nil, err
 	}
 
+	if !user.EmailVerified {
+		return nil, fmt.Errorf("email is not verified")
+	}
+
 	tokenString, err := s.NewToken(user)
 	if err != nil {
 		return nil, err
@@ -74,4 +79,11 @@ func (s *Service) Register(user *user.User) (*user.User, error) {
 		return nil, err
 	}
 	return user.ToResponse(), nil
+}
+
+func (s *Service) VerifyEmail(user *user.User, code string) error {
+	if *user.EmailVerifyCode != code {
+		return fmt.Errorf("invalid code")
+	}
+	return nil
 }

@@ -54,3 +54,31 @@ func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 	}
 	response.Success(w, user)
 }
+
+func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
+	userID := r.PathValue("user_id")
+	code := r.PathValue("code")
+
+	user, err := c.Service.UserService.FindByID(userID)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	err = c.Service.VerifyEmail(user, code)
+	if err != nil {
+		response.Error(w, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	user.EmailVerified = true
+	user.EmailVerifyCode = nil
+
+	user, err = c.Service.UserService.Update(user.ID.String(), user)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	response.Success(w, user)
+}

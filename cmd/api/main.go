@@ -10,6 +10,7 @@ import (
 	"github.com/safatanc/blockstuff-api/internal/domain/auth"
 	"github.com/safatanc/blockstuff-api/internal/domain/callback"
 	"github.com/safatanc/blockstuff-api/internal/domain/item"
+	"github.com/safatanc/blockstuff-api/internal/domain/mail"
 	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
 	"github.com/safatanc/blockstuff-api/internal/domain/payout"
 	"github.com/safatanc/blockstuff-api/internal/domain/storage"
@@ -52,8 +53,11 @@ func main() {
 	// Domain Storage
 	storageService := storage.NewService()
 
+	// Domain Mail
+	mailService := mail.NewService()
+
 	// Domain User
-	userService := user.NewService(db, validate)
+	userService := user.NewService(db, validate, mailService)
 	userController := user.NewController(userService)
 	userRoutes := user.NewRoutes(mux, userController, mw)
 	userRoutes.Init()

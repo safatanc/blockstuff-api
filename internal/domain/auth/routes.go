@@ -18,4 +18,5 @@ func (r *Routes) Init() {
 	r.Mux.HandleFunc("POST /auth/verify", r.Controller.Verify)
 	r.Mux.HandleFunc("POST /auth/login", r.Controller.Login)
 	r.Mux.HandleFunc("POST /auth/register", r.Controller.Register)
+	r.Mux.HandleFunc("GET /auth/verify/email/{user_id}/{code}", r.Controller.VerifyEmail)
 }

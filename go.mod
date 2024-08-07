@@ -14,6 +14,7 @@ require (
 	github.com/rs/cors v1.11.0
 	github.com/xendit/xendit-go/v6 v6.0.0-20240801082904-6d99757ad011
 	golang.org/x/crypto v0.24.0
+	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.11
 )
@@ -41,5 +42,4 @@ require (
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
-	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
 )

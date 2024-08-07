@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/safatanc/blockstuff-api/internal/domain/storage"
+	"github.com/safatanc/blockstuff-api/pkg/converter"
 	"github.com/safatanc/blockstuff-api/pkg/util"
 	"gorm.io/gorm"
 )
@@ -49,6 +50,7 @@ func (s *Service) FindBySlug(slug string, detail bool) (*MinecraftServer, error)
 	if detail {
 		result = s.DB.Preload("Author").Preload("MinecraftServerRcon").First(&minecraftserver, "slug = ?", slug)
 		minecraftserver.Author = minecraftserver.Author.ToResponse()
+		minecraftserver.MinecraftServerRcon.Password = ""
 	} else {
 		result = s.DB.First(&minecraftserver, "slug = ?", slug)
 	}
@@ -115,6 +117,13 @@ func (s *Service) UpdateRcon(rcon *MinecraftServerRcon) (*MinecraftServer, error
 	if err != nil {
 		return nil, err
 	}
+
+	encryptedPassword, err := converter.EncryptPassword(rcon.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	rcon.Password = *encryptedPassword
 
 	result := s.DB.Where("minecraft_server_id = ?", rcon.MinecraftServerID).Updates(&rcon)
 	if result.Error != nil {

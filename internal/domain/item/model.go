@@ -19,6 +19,7 @@ type Item struct {
 	MinecraftServer   *minecraftserver.MinecraftServer `json:"minecraft_server,omitempty"`
 	ItemImages        []*ItemImage                     `json:"item_images,omitempty"`
 	ItemActions       []*ItemAction                    `json:"item_actions,omitempty"`
+	Visible           bool                             `gorm:"default:true" json:"visible"`
 	CreatedAt         time.Time                        `gorm:"autoCreateTime" json:"created_at,omitempty"`
 	UpdatedAt         time.Time                        `gorm:"autoUpdateTime" json:"updated_at,omitempty"`
 }

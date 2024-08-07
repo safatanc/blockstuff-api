@@ -33,14 +33,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// db.AutoMigrate(
-	// 	&user.User{}, &minecraftserver.MinecraftServer{}, &minecraftserver.MinecraftServerRcon{},
-	// 	&item.Item{}, &item.ItemImage{}, &item.ItemAction{},
-	// 	&transaction.Transaction{}, &transaction.TransactionItem{},
-	// 	&payout.Payout{}, &payout.PayoutTransaction{},
-	// )
 	db.AutoMigrate(
-		&transaction.Transaction{},
+		&user.User{}, &minecraftserver.MinecraftServer{}, &minecraftserver.MinecraftServerRcon{},
+		&item.Item{}, &item.ItemImage{}, &item.ItemAction{},
+		&transaction.Transaction{}, &transaction.TransactionItem{},
+		&payout.Payout{}, &payout.PayoutTransaction{},
 	)
 
 	// Validate
@@ -92,7 +89,7 @@ func main() {
 	payoutRoutes.Init()
 
 	// Domain Callback
-	callbackService := callback.NewService(db, minecraftServerService, itemService)
+	callbackService := callback.NewService(db, minecraftServerService, itemService, transactionService)
 	callbackController := callback.NewController(callbackService)
 	callbackRoutes := callback.NewRoutes(mux, callbackController)
 	callbackRoutes.Init()

@@ -27,7 +27,7 @@ func NewService(db *gorm.DB, validate *validator.Validate, storage *storage.Serv
 
 func (s *Service) FindAll(minecraftServerID string) []*Item {
 	var items = make([]*Item, 0)
-	s.DB.Preload("ItemImages").Order("price ASC").Find(&items, "minecraft_server_id = ?", minecraftServerID)
+	s.DB.Preload("ItemImages").Order("price ASC").Find(&items, "minecraft_server_id = ? AND visible = ?", minecraftServerID, true)
 	return items
 }
 
@@ -42,7 +42,7 @@ func (s *Service) FindByID(id string) (*Item, error) {
 
 func (s *Service) FindBySlug(minecraftServerID string, slug string) (*Item, error) {
 	var item *Item
-	result := s.DB.Preload("ItemActions").Preload("ItemImages").First(&item, "minecraft_server_id = ? AND slug = ?", minecraftServerID, slug)
+	result := s.DB.Preload("ItemActions").Preload("ItemImages").First(&item, "minecraft_server_id = ? AND slug = ? AND visible = ?", minecraftServerID, slug, true)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -55,7 +55,8 @@ func (s *Service) Create(item *Item) (*Item, error) {
 		return nil, err
 	}
 
-	_, err = s.FindBySlug(*item.MinecraftServerID, item.Slug)
+	var findItem *Item
+	err = s.DB.First(&findItem, "minecraft_server_id = ? AND slug = ?", *item.MinecraftServerID, item.Slug).Error
 	if err == nil {
 		return nil, fmt.Errorf("slug %v already exists", item.Slug)
 	}

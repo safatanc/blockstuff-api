@@ -104,7 +104,7 @@ func (s *Service) VerifyEmail(user *user.User, code string) error {
 	return nil
 }
 
-func (s *Service) ResetPassword(email string) error {
+func (s *Service) SendVerifyCode(email string, subject string) error {
 	user, err := s.UserService.FindByEmail(email)
 	if err != nil {
 		return err
@@ -118,7 +118,7 @@ func (s *Service) ResetPassword(email string) error {
 		return err
 	}
 
-	err = s.MailService.Send([]string{user.Email}, "Reset Password", fmt.Sprintf("Kode Verifikasi: %v", *user.EmailVerifyCode))
+	err = s.MailService.Send([]string{user.Email}, subject, fmt.Sprintf("Kode Verifikasi: %v", *user.EmailVerifyCode))
 	return err
 }
 

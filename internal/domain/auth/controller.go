@@ -56,10 +56,10 @@ func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
-	userID := r.PathValue("user_id")
+	email := r.PathValue("email")
 	code := r.PathValue("code")
 
-	user, err := c.Service.UserService.FindByID(userID)
+	user, err := c.Service.UserService.FindByEmail(email)
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return
@@ -83,10 +83,10 @@ func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, user)
 }
 
-func (c *Controller) ResetPassword(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) SendVerifyCode(w http.ResponseWriter, r *http.Request) {
 	email := r.PathValue("email")
 
-	err := c.Service.ResetPassword(email)
+	err := c.Service.SendVerifyCode(email, "Verify Email")
 	if err != nil {
 		response.Error(w, util.GetErrorStatusCode(err), err.Error())
 		return

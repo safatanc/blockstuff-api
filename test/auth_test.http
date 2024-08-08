@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
   "username": "agilistikmal",
-  "password": "Rahasia123"
+  "password": "Agil12345"
 }
 
 ### Register
@@ -32,3 +32,9 @@ Origin: http://localhost:3000
 
 ### Verify Email
 GET {{base_url}}/auth/verify/email/c9c05c79-8f5f-40f4-950d-79af6d370351/ePGyV
+
+### Request Reset Password
+GET {{base_url}}/auth/reset/password/request/agilistikmal3@gmail.com
+
+### Verify Reset Password
+PUT {{base_url}}/auth/reset/password/verify/agilistikmal3@gmail.com/TGXNs/Agil12345

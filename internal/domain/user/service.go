@@ -1,26 +1,20 @@
 package user
 
 import (
-	"fmt"
-
 	"github.com/go-playground/validator/v10"
-	"github.com/safatanc/blockstuff-api/internal/domain/mail"
 	"github.com/safatanc/blockstuff-api/pkg/converter"
-	"github.com/safatanc/blockstuff-api/pkg/util"
 	"gorm.io/gorm"
 )
 
 type Service struct {
-	DB          *gorm.DB
-	Validate    *validator.Validate
-	MailService *mail.Service
+	DB       *gorm.DB
+	Validate *validator.Validate
 }
 
-func NewService(db *gorm.DB, validate *validator.Validate, mailService *mail.Service) *Service {
+func NewService(db *gorm.DB, validate *validator.Validate) *Service {
 	return &Service{
-		DB:          db,
-		Validate:    validate,
-		MailService: mailService,
+		DB:       db,
+		Validate: validate,
 	}
 }
 
@@ -54,6 +48,15 @@ func (s *Service) FindByUsername(username string) (*User, error) {
 	return user.ToResponse(), nil
 }
 
+func (s *Service) FindByEmail(email string) (*User, error) {
+	var user *User
+	result := s.DB.First(&user, "email = ?", email)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return user.ToResponse(), nil
+}
+
 func (s *Service) Create(user *User) (*User, error) {
 	err := s.Validate.Struct(user)
 	if err != nil {
@@ -65,25 +68,11 @@ func (s *Service) Create(user *User) (*User, error) {
 		return nil, err
 	}
 
-	emailVerifyCode := util.RandomString(5)
-
 	user.Password = hashPassword
-	user.EmailVerifyCode = &emailVerifyCode
 
-	err = s.DB.Transaction(func(tx *gorm.DB) error {
-		result := tx.Create(&user)
-		if result.Error != nil {
-			return result.Error
-		}
-
-		err := s.MailService.Send([]string{user.Email}, "Verify Email", fmt.Sprintf("Kode Verifikasi: %v", *user.EmailVerifyCode))
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
-		return nil, err
+	result := s.DB.Create(&user)
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	return user.ToResponse(), nil

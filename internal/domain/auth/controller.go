@@ -82,3 +82,29 @@ func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 
 	response.Success(w, user)
 }
+
+func (c *Controller) ResetPassword(w http.ResponseWriter, r *http.Request) {
+	email := r.PathValue("email")
+
+	err := c.Service.ResetPassword(email)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	response.Success(w, nil)
+}
+
+func (c *Controller) ResetPasswordVerify(w http.ResponseWriter, r *http.Request) {
+	email := r.PathValue("email")
+	code := r.PathValue("code")
+	newPassword := r.PathValue("new_password")
+
+	err := c.Service.ResetPasswordVerify(email, code, newPassword)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	response.Success(w, nil)
+}

@@ -57,13 +57,13 @@ func main() {
 	mailService := mail.NewService()
 
 	// Domain User
-	userService := user.NewService(db, validate, mailService)
+	userService := user.NewService(db, validate)
 	userController := user.NewController(userService)
 	userRoutes := user.NewRoutes(mux, userController, mw)
 	userRoutes.Init()
 
 	// Domain Auth
-	authService := auth.NewService(db, validate, userService)
+	authService := auth.NewService(db, validate, userService, mailService)
 	authController := auth.NewController(authService)
 	authRoutes := auth.NewRoutes(mux, authController)
 	authRoutes.Init()

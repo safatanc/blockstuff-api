@@ -19,4 +19,6 @@ func (r *Routes) Init() {
 	r.Mux.HandleFunc("POST /auth/login", r.Controller.Login)
 	r.Mux.HandleFunc("POST /auth/register", r.Controller.Register)
 	r.Mux.HandleFunc("GET /auth/verify/email/{user_id}/{code}", r.Controller.VerifyEmail)
+	r.Mux.HandleFunc("GET /auth/reset/password/request/{email}", r.Controller.ResetPassword)
+	r.Mux.HandleFunc("PUT /auth/reset/password/verify/{email}/{code}/{new_password}", r.Controller.ResetPasswordVerify)
 }

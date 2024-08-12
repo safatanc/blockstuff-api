@@ -1,5 +1,6 @@
 package auth
 
 type Auth struct {
-	Token string `json:"token,omitempty"`
+	UserID string `json:"user_id,omitempty"`
+	Token  string `json:"token,omitempty"`
 }

@@ -73,7 +73,8 @@ func (s *Service) VerifyUser(username string, password string) (*Auth, error) {
 		return nil, err
 	}
 	return &Auth{
-		Token: tokenString,
+		UserID: user.ID.String(),
+		Token:  tokenString,
 	}, nil
 }
 

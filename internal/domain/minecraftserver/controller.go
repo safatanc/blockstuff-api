@@ -25,7 +25,17 @@ func NewController(service *Service, userService *user.Service) *Controller {
 }
 
 func (c *Controller) FindAll(w http.ResponseWriter, r *http.Request) {
-	minecraftservers := c.Service.FindAll()
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		page = 1
+	}
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil {
+		limit = 30
+	}
+	authorID := r.URL.Query().Get("author_id")
+
+	minecraftservers := c.Service.FindAll(page, limit, authorID)
 	response.Success(w, minecraftservers)
 }
 

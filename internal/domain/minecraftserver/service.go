@@ -2,6 +2,7 @@ package minecraftserver
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"mime/multipart"
 	"strings"
@@ -28,9 +29,16 @@ func NewService(db *gorm.DB, validate *validator.Validate, storage *storage.Serv
 	}
 }
 
-func (s *Service) FindAll() []*MinecraftServer {
+func (s *Service) FindAll(page int, limit int, authorID string) []*MinecraftServer {
 	var minecraftservers = make([]*MinecraftServer, 0)
-	s.DB.Find(&minecraftservers)
+
+	log.Println(page, limit, authorID)
+
+	if authorID != "" {
+		s.DB.Scopes(util.Paginate(page, limit)).Where("author_id = ?", authorID).Find(&minecraftservers)
+	} else {
+		s.DB.Scopes(util.Paginate(page, limit)).Find(&minecraftservers)
+	}
 
 	return minecraftservers
 }

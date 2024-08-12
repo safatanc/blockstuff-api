@@ -2,7 +2,7 @@
 @access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjMwNzk0MjMsInVzZXIiOnsiaWQiOiI5ZjllOWRiNy0wODgxLTQ0MzktOTYyZi01NWExZTU2ZjExZGUiLCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCIsImVtYWlsIjoiYWdpbGlzdGlrbWFsM0BnbWFpbC5jb20iLCJwaG9uZSI6Iis2MjgxMzQ2MTczODI5IiwiZnVsbF9uYW1lIjoiQWdpbCBHaGFuaSBJc3Rpa21hbCIsInJvbGUiOiJBRE1JTiIsImNyZWF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCIsInVwZGF0ZWRfYXQiOiIyMDI0LTA3LTI0VDA3OjQxOjIyLjczNjA3OSswNzowMCJ9LCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCJ9.bDdiT-G6pnAy3MR7SNmz_PnMOO3kVuSj_sLh7PKsg-g
 
 ### Find All Minecraft Servers
-GET {{base_url}}/minecraftserver
+GET {{base_url}}/minecraftserver?page=1&limit=1&author_id=9f9e9db7-0881-4439-962f-55a1e56f11de
 
 ### Find Minecraft Server by Slug
 GET {{base_url}}/minecraftserver/bsf-craft

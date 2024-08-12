@@ -2,6 +2,7 @@ package user
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -35,6 +36,34 @@ func (c *Controller) FindAll(w http.ResponseWriter, r *http.Request) {
 
 	users := c.Service.FindAll()
 	response.Success(w, users)
+}
+
+func (c *Controller) FindByID(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	claims := r.Context().Value("claims").(jwt.MapClaims)
+
+	var claimsUser User
+	claimsUserJson, _ := json.Marshal(claims["user"])
+
+	err := json.Unmarshal(claimsUserJson, &claimsUser)
+	if err != nil {
+		response.Error(w, http.StatusUnauthorized, "failed to read user from accessToken")
+		return
+	}
+
+	fmt.Println(claimsUser)
+	if claimsUser.ID.String() != id {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	user, err := c.Service.FindByID(id)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	response.Success(w, user)
 }
 
 func (c *Controller) FindByUsername(w http.ResponseWriter, r *http.Request) {

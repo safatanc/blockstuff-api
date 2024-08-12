@@ -23,6 +23,7 @@ func NewRoutes(mux *http.ServeMux, controller *Controller, middleware *middlewar
 func (r *Routes) Init() {
 	r.Mux.Handle("GET /user", r.Middleware.Auth(http.HandlerFunc(r.Controller.FindAll)))
 	r.Mux.Handle("GET /user/{username}", r.Middleware.Auth(http.HandlerFunc(r.Controller.FindByUsername)))
+	r.Mux.Handle("GET /user/id/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.FindByID)))
 	r.Mux.Handle("POST /user", r.Middleware.Auth(http.HandlerFunc(r.Controller.Create)))
 	r.Mux.Handle("PATCH /user/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Update)))
 	r.Mux.Handle("DELETE /user/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Delete)))

@@ -87,7 +87,7 @@ func main() {
 	transactionRoutes.Init()
 
 	// Domain Payout
-	payoutService := payout.NewService(db, validate)
+	payoutService := payout.NewService(db, validate, xenditClient)
 	payoutController := payout.NewController(payoutService, userService, itemService, transactionService)
 	payoutRoutes := payout.NewRoutes(mux, payoutController, mw)
 	payoutRoutes.Init()

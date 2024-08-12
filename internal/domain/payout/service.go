@@ -1,22 +1,27 @@
 package payout
 
 import (
+	"context"
 	"os"
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/xendit/xendit-go/v6"
+	"github.com/xendit/xendit-go/v6/payout"
 	"gorm.io/gorm"
 )
 
 type Service struct {
-	DB       *gorm.DB
-	Validate *validator.Validate
+	DB           *gorm.DB
+	Validate     *validator.Validate
+	XenditClient *xendit.APIClient
 }
 
-func NewService(db *gorm.DB, validate *validator.Validate) *Service {
+func NewService(db *gorm.DB, validate *validator.Validate, xenditClient *xendit.APIClient) *Service {
 	return &Service{
-		DB:       db,
-		Validate: validate,
+		DB:           db,
+		Validate:     validate,
+		XenditClient: xenditClient,
 	}
 }
 
@@ -107,4 +112,12 @@ func (s *Service) Delete(id string) (*Payout, error) {
 		return nil, result.Error
 	}
 	return payout, nil
+}
+
+func (s *Service) FindPayoutChannels() ([]payout.Channel, error) {
+	payoutChannels, _, err := s.XenditClient.PayoutApi.GetPayoutChannels(context.Background()).Currency("IDR").Execute()
+	if err != nil {
+		return nil, err
+	}
+	return payoutChannels, nil
 }

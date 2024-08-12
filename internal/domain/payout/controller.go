@@ -171,3 +171,12 @@ func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 	response.Success(w, payout)
 }
+
+func (c *Controller) FindPayoutChannels(w http.ResponseWriter, r *http.Request) {
+	payoutChannels, err := c.Service.FindPayoutChannels()
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+	response.Success(w, payoutChannels)
+}

@@ -1,5 +1,5 @@
 @base_url = http://localhost:5000
-@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE4NzM1NzksInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0.A4DC_wOP_REbAfXRVIm4LaD481KNysTr2h8HAg3am2g
+@access_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjM1MTUzNzEsInVzZXIiOnsiaWQiOiI5ZjllOWRiNy0wODgxLTQ0MzktOTYyZi01NWExZTU2ZjExZGUiLCJ1c2VybmFtZSI6ImFnaWxpc3Rpa21hbCIsImVtYWlsIjoiYWdpbGlzdGlrbWFsM0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZW1haWxfdmVyaWZ5X2NvZGUiOiJUR1hOcyIsInBob25lIjoiKzYyODEzNDYxNzM4MjkiLCJmdWxsX25hbWUiOiJBZ2lsIEdoYW5pIElzdGlrbWFsIiwicm9sZSI6IkFETUlOIiwiY3JlYXRlZF9hdCI6IjIwMjQtMDctMjRUMDc6NDE6MjIuNzM2MDc5KzA3OjAwIiwidXBkYXRlZF9hdCI6IjIwMjQtMDgtMDhUMDk6MDQ6MDMuNTU0NjIyKzA3OjAwIn0sInVzZXJuYW1lIjoiYWdpbGlzdGlrbWFsIn0._Pwu2fiCVPyX4k-VaUdIabzaLpFKeapmX302miHUAgs
 
 ### Find All Payouts
 GET {{base_url}}/payout
@@ -41,4 +41,8 @@ Authorization: Bearer {{access_token}}
 
 ### Delete by ID
 DELETE {{base_url}}/payout/88a5379a-4c9a-4ab0-9569-391cb69a0c2f
+Authorization: Bearer {{access_token}}
+
+### Find Payout Channels
+GET {{base_url}}/payout/channel
 Authorization: Bearer {{access_token}}

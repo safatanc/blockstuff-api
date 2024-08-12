@@ -26,4 +26,5 @@ func (r *Routes) Init() {
 	r.Mux.Handle("POST /payout", r.Middleware.Auth(http.HandlerFunc(r.Controller.Create)))
 	r.Mux.Handle("PATCH /payout/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Update)))
 	r.Mux.Handle("DELETE /payout/{id}", r.Middleware.Auth(http.HandlerFunc(r.Controller.Delete)))
+	r.Mux.Handle("GET /payout/channel", r.Middleware.Auth(http.HandlerFunc(r.Controller.FindPayoutChannels)))
 }

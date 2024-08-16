@@ -44,5 +44,5 @@ DELETE {{base_url}}/payout/88a5379a-4c9a-4ab0-9569-391cb69a0c2f
 Authorization: Bearer {{access_token}}
 
 ### Find Payout Channels
-GET {{base_url}}/payout/channel
+GET {{base_url}}/payout/channel 
 Authorization: Bearer {{access_token}}

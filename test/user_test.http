@@ -38,3 +38,5 @@ Authorization: Bearer {{access_token}}
 ### Delete User
 DELETE {{base_url}}/user/e5181182-5db1-4a9f-8dc0-ae25cd90b2aa
 Authorization: Bearer {{access_token}}
+
+### GET

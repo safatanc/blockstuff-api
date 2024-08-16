@@ -24,3 +24,14 @@ func (u *User) ToResponse() *User {
 	u.Password = ""
 	return u
 }
+
+type UserPayoutChannel struct {
+	ID            uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id,omitempty"`
+	UserID        string    `json:"user_id,omitempty" validate:"required,uuid" gorm:"unique"`
+	User          *User     `json:"user,omitempty"`
+	Code          string    `json:"code,omitempty" validate:"required,min=3"`
+	Name          string    `json:"name,omitempty" validate:"required,min=3"`
+	AccountNumber string    `json:"account_number,omitempty" validate:"required"`
+	CreatedAt     time.Time `gorm:"autoCreateTime" json:"created_at,omitempty"`
+	UpdatedAt     time.Time `gorm:"autoUpdateTime" json:"updated_at,omitempty"`
+}

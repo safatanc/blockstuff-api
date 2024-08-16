@@ -180,3 +180,58 @@ func (c *Controller) FindPayoutChannels(w http.ResponseWriter, r *http.Request) 
 	}
 	response.Success(w, payoutChannels)
 }
+
+func (c *Controller) GetPayoutChannel(w http.ResponseWriter, r *http.Request) {
+	username := r.PathValue("username")
+	claims := r.Context().Value("claims").(jwt.MapClaims)
+
+	if claims["username"] != username {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	user, err := c.UserService.FindByUsername(username)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	userPayoutChannel, err := c.Service.GetPayoutChannel(user.ID.String())
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	response.Success(w, userPayoutChannel)
+}
+
+func (c *Controller) SetPayoutChannel(w http.ResponseWriter, r *http.Request) {
+	username := r.PathValue("username")
+	claims := r.Context().Value("claims").(jwt.MapClaims)
+
+	if claims["username"] != username {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	var userPayoutChannel *user.UserPayoutChannel
+	err := json.NewDecoder(r.Body).Decode(&userPayoutChannel)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	user, err := c.UserService.FindByUsername(username)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	userPayoutChannel, err = c.Service.SetPayoutChannel(user.ID.String(), userPayoutChannel)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	response.Success(w, userPayoutChannel)
+}

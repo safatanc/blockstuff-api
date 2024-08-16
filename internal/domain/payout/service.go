@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/safatanc/blockstuff-api/internal/domain/user"
 	"github.com/xendit/xendit-go/v6"
 	"github.com/xendit/xendit-go/v6/payout"
 	"gorm.io/gorm"
@@ -120,4 +121,30 @@ func (s *Service) FindPayoutChannels() ([]payout.Channel, error) {
 		return nil, err
 	}
 	return payoutChannels, nil
+}
+
+func (s *Service) GetPayoutChannel(userID string) (*user.UserPayoutChannel, error) {
+	var userPayoutChannel *user.UserPayoutChannel
+	err := s.DB.Take(&userPayoutChannel, "user_id = ?", userID).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return userPayoutChannel, nil
+}
+
+func (s *Service) SetPayoutChannel(userID string, userPayoutChannel *user.UserPayoutChannel) (*user.UserPayoutChannel, error) {
+	userPayoutChannel.UserID = userID
+	err := s.Validate.Struct(userPayoutChannel)
+	if err != nil {
+		return nil, err
+	}
+
+	findUserPayoutChannel, err := s.GetPayoutChannel(userID)
+	if err == nil {
+		userPayoutChannel = findUserPayoutChannel
+	}
+
+	err = s.DB.Save(&userPayoutChannel).Error
+	return userPayoutChannel, err
 }

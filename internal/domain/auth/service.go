@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"time"
 
@@ -109,6 +110,11 @@ func (s *Service) SendVerifyCode(email string, subject string) error {
 	user, err := s.UserService.FindByEmail(email)
 	if err != nil {
 		return err
+	}
+
+	difference := time.Until(user.UpdatedAt)
+	if math.Abs(difference.Seconds()) < 60 {
+		return fmt.Errorf("request limit reached. cooldown %.2f seconds", 60-math.Abs(difference.Seconds()))
 	}
 
 	emailVerifyCode := util.RandomString(5)

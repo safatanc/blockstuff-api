@@ -7,6 +7,7 @@ import (
 	"github.com/safatanc/blockstuff-api/internal/domain/item"
 	"github.com/safatanc/blockstuff-api/internal/domain/minecraftserver"
 	"github.com/safatanc/blockstuff-api/internal/domain/transaction"
+	"github.com/safatanc/blockstuff-api/pkg/converter"
 	"gorm.io/gorm"
 )
 
@@ -50,7 +51,14 @@ func (s *Service) XenditCallback(payload *XenditPayload) error {
 				return err
 			}
 
-			rconConnection, err := rcon.Dial(fmt.Sprintf("%v:%v", minecraftserver.MinecraftServerRcon.IP, minecraftserver.MinecraftServerRcon.Port), minecraftserver.MinecraftServerRcon.Password)
+			decodedMinecraftRconPassword, err := converter.DecryptPassword(minecraftserver.MinecraftServerRcon.Password)
+			if err != nil {
+				return err
+			}
+			rconConnection, err := rcon.Dial(
+				fmt.Sprintf("%v:%v", minecraftserver.MinecraftServerRcon.IP, minecraftserver.MinecraftServerRcon.Port),
+				*decodedMinecraftRconPassword,
+			)
 			if err != nil {
 				return err
 			}

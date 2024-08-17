@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: rgb(207, 92, 54, 0.2);   
+        color: black      ;
+        font-family: sans-serif;
+        padding-top: 24px;
+      }
+      .container {
+        background-color: white;
+        width: 100%;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 24px;
+      }
+      hr {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        border-width: 2px;
+        border-color: rgb(255, 255, 255, 0.1);
+      }
+      table {
+        width: 100%;
+        text-align: left;
+      }
+      .button {
+        padding: 12px;
+        display: block;
+        text-decoration: none;
+        color: white;
+        background-color: #CF5C36;
+        text-align: center;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2 style="text-align: center;">Transaksi</h2>
+      <hr>
+      <table>
+        <tr>
+          <th>Order ID</th>
+          <td>{{.OrderID}}</td>
+        </tr> 
+        <tr>
+          <th>Status</th>
+          <td>{{.Status}}</td>
+        </tr>
+        <tr>
+          <th>Subtotal</th>
+          <td>IDR {{.Subtotal}}</td>
+        </tr>
+      </table>
+      <hr>
+      <div>
+        <p>Terimakasih atas pesanan anda, untuk melihat detail pesanan silahkan klik tombol dibawah ini</p>
+        <a href="{{.TransactionURL}}" class="button" style="margin-top: 16px;">View Transaction</a>
+      </div>
+      <div style="margin-top: 10px;">
+        <p style="font-size: small;">atau copy link dibawah ini jika tombol tidak berfungsi</p>
+        <a href="{{.TransactionURL}}" style="color: #CF5C36;">{{.TransactionURL}}</a>
+      </div>
+      <div style="margin-top: 28px;">
+        <p style="opacity: 50%; font-size: small;">{{.Date}}</p>
+    </div>
+    </div>
+    <div style="margin-top: 24px; background-color: transparent; padding: 0; text-align: center;" class="container">
+      <p>Blockstuff {{.Year}}</p>
+      <p style="font-size: small; margin-top: 5px;">Part of <a href="https://safatanc.com" style="color: #CF5C36; text-decoration: none; font-weight: bold;">SAFATANC CORP</a></p>
+      <p style="font-size: x-small;">PT SAFATANC TECHNOLOGY DIGITAL</p>
+    </div>
+  </body>
+</html>

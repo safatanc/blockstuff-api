@@ -217,6 +217,7 @@ func (s *Service) CreatePayment(transaction *Transaction) (*payment_request.Paym
 			Currency:    "IDR",
 			Quantity:    float64(transactionItem.Quantity),
 			Type:        &transactionItem.Item.Category,
+			Category:    transactionItem.Item.Category,
 		})
 	}
 

@@ -30,9 +30,13 @@ func NewService(db *gorm.DB, validate *validator.Validate, xenditClient *xendit.
 	}
 }
 
-func (s *Service) FindAll() []*Transaction {
+func (s *Service) FindAll(server_id string) []*Transaction {
 	var transactions = make([]*Transaction, 0)
-	s.DB.Preload("TransactionItems").Preload("TransactionItems.Item").Order("created_at DESC").Find(&transactions)
+	if server_id != "" {
+		s.DB.Preload("TransactionItems").Preload("TransactionItems.Item").Order("created_at DESC").Find(&transactions, "TransactionItems.Item.MinecraftServerID = ?", server_id)
+	} else {
+		s.DB.Preload("TransactionItems").Preload("TransactionItems.Item").Order("created_at DESC").Find(&transactions)
+	}
 	return transactions
 }
 

@@ -26,7 +26,35 @@ func NewController(service *Service, userService *user.Service, minecraftServerS
 }
 
 func (c *Controller) FindAll(w http.ResponseWriter, r *http.Request) {
-	transactions := c.Service.FindAll()
+	serverId := r.URL.Query().Get("server_id")
+
+	claims := r.Context().Value("claims").(jwt.MapClaims)
+	claimsUsername := claims["username"].(string)
+	claimsUser, err := c.UserService.FindByUsername(claimsUsername)
+	if err != nil {
+		response.Error(w, util.GetErrorStatusCode(err), err.Error())
+		return
+	}
+
+	if serverId != "" {
+		minecraftserver, err := c.MinecraftServerService.FindByID(serverId)
+		if err != nil {
+			response.Error(w, util.GetErrorStatusCode(err), err.Error())
+			return
+		}
+
+		if !(claimsUser.Role == "ADMIN" || claimsUser.ID.String() == minecraftserver.AuthorID) {
+			response.Error(w, http.StatusUnauthorized, "unauthorized")
+			return
+		}
+	} else {
+		if !(claimsUser.Role == "ADMIN") {
+			response.Error(w, http.StatusUnauthorized, "unauthorized")
+			return
+		}
+	}
+
+	transactions := c.Service.FindAll(serverId)
 	response.Success(w, transactions)
 }
 
